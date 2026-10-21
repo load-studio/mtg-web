@@ -160,6 +160,58 @@ export function renderMarkdown(markdown: string): ReactNode {
       continue
     }
 
+    if (line.trim() === ":::preset-grid") {
+      flushPendingText()
+      const cardBlocks: string[][] = []
+      let currentCard: string[] = []
+      index += 1
+
+      for (; index < lines.length && lines[index].trim() !== ":::endgrid"; index += 1) {
+        if (lines[index].trim() === ":::card") {
+          if (currentCard.length > 0) cardBlocks.push(currentCard)
+          currentCard = []
+          continue
+        }
+        currentCard.push(lines[index])
+      }
+      if (currentCard.length > 0) cardBlocks.push(currentCard)
+
+      blocks.push(
+        <div key={`preset-grid-${blocks.length}`} className="my-5 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2">
+          {cardBlocks.map((cardLines, cardIndex) => {
+            const imageLine = cardLines.find((value) => /^!\\[[^\\]]*\\]\\([^)]+\\)$/.test(value.trim()))?.trim() ?? ""
+            const titleLine = cardLines.find((value) => /^\\*\\*.+\\*\\*$/.test(value.trim()))?.trim() ?? ""
+            const linkLine = cardLines.find((value) => /^\\[[^\\]]+\\]\\([^)]+\\)$/.test(value.trim()))?.trim() ?? ""
+            const description = cardLines.find((value) => value.trim() && value.trim() !== imageLine && value.trim() !== titleLine && value.trim() !== linkLine)?.trim() ?? ""
+            const image = imageLine.match(/^!\\[([^\\]]*)\\]\\(([^)]+)\\)$/)
+            const link = linkLine.match(/^\\[([^\\]]+)\\]\\(([^)]+)\\)$/)
+
+            return (
+              <div key={cardIndex} className="flex h-full min-w-0 flex-col rounded-lg border p-4">
+                {image ? <MarkdownImage src={image[2]} alt={image[1]} /> : null}
+                <div className="mt-2 font-semibold">{renderInline(titleLine, `preset-title-${cardIndex}`)}</div>
+                <p className="mt-2 text-sm text-muted-foreground">{renderInline(description, `preset-description-${cardIndex}`)}</p>
+                {link ? (
+                  <div className="mt-auto flex justify-center pt-4">
+                    <a
+                      href={link[2]}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ textDecoration: "none" }}
+                      className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground no-underline hover:opacity-90"
+                    >
+                      {link[1]}
+                    </a>
+                  </div>
+                ) : null}
+              </div>
+            )
+          })}
+        </div>,
+      )
+      continue
+    }
+
     if (line.trimStart().startsWith("|")) {
       flushPendingText()
 
