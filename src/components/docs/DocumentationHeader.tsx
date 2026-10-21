@@ -10,6 +10,13 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import type { Locale } from "@/types/documentation"
 
@@ -57,15 +64,20 @@ export function DocumentationHeader({
         <label htmlFor={languageSelectId} className="sr-only">
           {labels.language}
         </label>
-        <select
-          id={languageSelectId}
+        <Select
           value={language}
-          onChange={(event) => onLanguageChange(event.target.value as "en" | "pt")}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          onValueChange={(value) => {
+            if (value === "en" || value === "pt") onLanguageChange(value)
+          }}
         >
-          <option value="en">English</option>
-          <option value="pt">Português</option>
-        </select>
+          <SelectTrigger id={languageSelectId} size="sm" aria-label={labels.language} className="min-w-32">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end">
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="pt">Português</SelectItem>
+          </SelectContent>
+        </Select>
         <Button
           variant="outline"
           size="sm"
