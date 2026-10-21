@@ -24,7 +24,7 @@
     "preset-catalog": {
       "title": "OTG Presets",
       "group": "Getting started",
-      "summary": "Browse original OpenTerrainGenerator presets and evaluate their compatibility with MTG."
+      "summary": "Browse the original OpenTerrainGenerator preset catalogue and check compatibility with MTG."
     },
     "installation": {
       "title": "Installation",
