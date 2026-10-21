@@ -23,7 +23,7 @@ export const gettingStartedDocs: DocSection[] = [
         <h2>Compatibility</h2>
         <p>This documentation targets MTG on Paper 1.21.11 only. It does not cover Forge, Fabric, client-side installation, mod loaders, or modpack-specific dimension configuration. Older OTG pages describe earlier versions; use this guide and the preset files shipped with MTG as the reference for current behaviour.</p>
         <p>Project: <a href="https://github.com/StudioLoad/ModernTerrainGenerator" target="_blank" rel="noreferrer">StudioLoad/ModernTerrainGenerator</a>.</p>
-        <Figure src="https://cdn-loadmc.rodriaum.com/assets/designs/mtg-logo.png" alt="ModernTerrainGenerator logo" caption="ModernTerrainGenerator" />
+        <Figure src="https://cdn-loadmc.rodriaum.com/assets/designs/mtg-logo.png" alt="ModernTerrainGenerator logo" caption="ModernTerrainGenerator" className="mx-auto w-fit max-w-full" imageClassName="min-w-0 w-36 sm:w-40" />
       </>
     ),
   },
@@ -71,28 +71,28 @@ export const gettingStartedDocs: DocSection[] = [
         <p>These screenshots and download pages are hosted by the original preset projects. They are legacy OTG downloads, not builds verified for MTG or Paper 1.21.11.</p>
         <div className="grid gap-5 md:grid-cols-2">
           <div className="rounded-lg border p-4">
-            <Figure src="https://media.forgecdn.net/attachments/408/116/2021-09-27_01.jpg" alt="Vanilla Vistas terrain screenshot" caption="Vanilla Vistas — varied terrain with a vanilla style" />
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/vanilla-vistas" target="_blank" rel="noreferrer">↓ Download on CurseForge</a>
+            <Figure src="https://media.forgecdn.net/attachments/408/116/2021-09-27_01.jpg" alt="Vanilla Vistas terrain screenshot" caption="Vanilla Vistas - varied terrain with a vanilla style" />
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/vanilla-vistas" target="_blank" rel="noreferrer">↓ Download on CurseForge</a></div>
           </div>
           <div className="rounded-lg border p-4">
-            <Figure src="https://i.imgur.com/YtDraMh.jpg" alt="Biome Bundle preset image" caption="Biome Bundle — custom biomes, terrain and structures" />
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/biome-bundle" target="_blank" rel="noreferrer">↓ Download on CurseForge</a>
+            <Figure src="https://i.imgur.com/YtDraMh.jpg" alt="Biome Bundle preset image" caption="Biome Bundle - custom biomes, terrain and structures" />
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/biome-bundle" target="_blank" rel="noreferrer">↓ Download on CurseForge</a></div>
           </div>
           <div className="rounded-lg border p-4">
-            <Figure src="https://i.imgur.com/UBrN38m.png" alt="Biome Bundle O Plenty preset image" caption="Biome Bundle O' Plenty — Biomes O' Plenty integration" />
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/biome-bundle-o-plenty" target="_blank" rel="noreferrer">↓ Download on CurseForge</a>
+            <Figure src="https://i.imgur.com/UBrN38m.png" alt="Biome Bundle O Plenty preset image" caption="Biome Bundle O' Plenty - Biomes O' Plenty integration" />
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/biome-bundle-o-plenty" target="_blank" rel="noreferrer">↓ Download on CurseForge</a></div>
           </div>
           <div className="rounded-lg border p-4">
-            <Figure src="https://i.imgur.com/pvmEtiO.png" alt="Wildlands terrain screenshot" caption="Wildlands — detailed climate zones and dramatic landscapes" />
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/wildlands" target="_blank" rel="noreferrer">↓ Download on CurseForge</a>
+            <Figure src="https://i.imgur.com/pvmEtiO.png" alt="Wildlands terrain screenshot" caption="Wildlands - detailed climate zones and dramatic landscapes" />
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/wildlands" target="_blank" rel="noreferrer">↓ Download on CurseForge</a></div>
           </div>
           <div className="rounded-lg border p-4">
-            <Figure src="https://media.forgecdn.net/attachments/409/183/2021-11-20_19.jpg" alt="Skylands floating islands screenshot" caption="Skylands — interconnected floating islands above the void" />
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/otg-skylands" target="_blank" rel="noreferrer">↓ Download on CurseForge</a>
+            <Figure src="https://media.forgecdn.net/attachments/409/183/2021-11-20_19.jpg" alt="Skylands floating islands screenshot" caption="Skylands - interconnected floating islands above the void" />
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/otg-skylands" target="_blank" rel="noreferrer">↓ Download on CurseForge</a></div>
           </div>
           <div className="rounded-lg border p-4">
-            <a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/dregora" target="_blank" rel="noreferrer">↓ Download Dregora on CurseForge</a>
-            <p className="mt-3 text-sm text-muted-foreground">Dregora — large-scale generation with hundreds of biomes and custom objects. Open the project page for its current gallery and files.</p>
+            <div className="flex justify-center"><a className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:opacity-90" href="https://www.curseforge.com/minecraft/mc-mods/dregora" target="_blank" rel="noreferrer">↓ Download Dregora on CurseForge</a></div>
+            <p className="mt-3 text-sm text-muted-foreground">Dregora - large-scale generation with hundreds of biomes and custom objects. Open the project page for its current gallery and files.</p>
           </div>
         </div>
         <h2>Compatibility with MTG</h2>
