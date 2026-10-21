@@ -78,7 +78,7 @@ export const gettingStartedDocs: DocSection[] = [
         <p>Do not assume a preset will work unchanged simply because the original page lists Paper or Spigot support. Test it before using it on a live world.</p>
       </>
     ),
-  }
+  },
   {
     id: "installation",
     title: "Installation",
