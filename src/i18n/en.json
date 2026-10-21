@@ -22,14 +22,14 @@
       "summary": "What MTG is and how its preset-driven world generation works."
     },
     "preset-catalog": {
-      "title": "Presets and Compatibility",
+      "title": "OTG Presets",
       "group": "Getting started",
-      "summary": "Find, evaluate, and migrate community presets for MTG 1.21.11."
+      "summary": "Browse the original OpenTerrainGenerator preset catalogue and check compatibility with MTG."
     },
     "installation": {
       "title": "Installation",
       "group": "Getting started",
-      "summary": "Install MTG on a Paper 1.21.11 server."
+      "summary": "Install MTG on a Paper 1.21.11 server and select a preset generator."
     },
     "install-presets": {
       "title": "Installing Presets",
