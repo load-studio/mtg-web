@@ -6,7 +6,9 @@
     "documentation": "Documentação",
     "issue": "Editar ou reportar um problema",
     "footer": "ModernTerrainGenerator · Paper 1.21.11",
-    "language": "Idioma"
+    "language": "Idioma",
+    "switchToLight": "Mudar para modo claro",
+    "switchToDark": "Mudar para modo escuro"
   },
   "groups": [
     "Introdução",
