@@ -62,11 +62,11 @@ export const tutorialDocs: DocSection[] = [
       <p>Image-based biome generation can use a colour-coded image to define biome placement. The inherited format exposes settings such as <code>BiomeMode</code>, <code>ImageMode</code>, <code>ImageFile</code>, <code>ImageOrientation</code>, and image offsets. Confirm support and exact behaviour in the MTG build before relying on it for production.</p>
       <h2>Prepare the map</h2>
       <ol>
-      <li>Set a unique <code>BiomeColor</code> for each biome.</li>
-      <li>Create an RGB PNG using those exact colours. Disable anti-aliasing, blur, transparency, and lossy compression.</li>
-      <li>Use a hard-edged pencil tool. Colours that do not match may resolve to the fill biome.</li>
-      <li>Place the image in the path expected by the preset and set the image options.</li>
-      <li>Generate a small test world to confirm orientation, offsets, and behaviour beyond image edges.</li>
+        <li>Set a unique <code>BiomeColor</code> for each biome.</li>
+        <li>Create an RGB PNG using those exact colours. Disable anti-aliasing, blur, transparency, and lossy compression.</li>
+        <li>Use a hard-edged pencil tool. Colours that do not match may resolve to the fill biome.</li>
+        <li>Place the image in the path expected by the preset and set the image options.</li>
+        <li>Generate a small test world to confirm orientation, offsets, and behaviour beyond image edges.</li>
       </ol>
       <h2>Example settings</h2>
       <Code title="Illustrative WorldConfig.ini excerpt">{"BiomeMode: FromImage\nImageMode: Mirror\nImageFile: map.png\nImageOrientation: West\nImageFillBiome: Ocean\nImageXOffset: 0\nImageZOffset: 0"}</Code>
