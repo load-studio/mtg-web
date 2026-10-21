@@ -1,5 +1,5 @@
 import { useId } from "react"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -10,7 +10,16 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Toggle } from "@/components/ui/toggle"
+import { useTheme } from "@/components/theme-provider"
 import type { Locale } from "@/types/documentation"
 
 type DocumentationHeaderProps = {
@@ -29,6 +38,8 @@ export function DocumentationHeader({
   onNavigate,
 }: DocumentationHeaderProps) {
   const languageSelectId = useId()
+  const { theme, setTheme } = useTheme()
+  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
@@ -54,18 +65,34 @@ export function DocumentationHeader({
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-2">
+        <Toggle
+          type="button"
+          variant="outline"
+          size="sm"
+          pressed={isDark}
+          onPressedChange={(pressed) => setTheme(pressed ? "dark" : "light")}
+          aria-label={isDark ? labels.switchToLight : labels.switchToDark}
+          title={isDark ? labels.switchToLight : labels.switchToDark}
+        >
+          {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
+        </Toggle>
         <label htmlFor={languageSelectId} className="sr-only">
           {labels.language}
         </label>
-        <select
-          id={languageSelectId}
+        <Select
           value={language}
-          onChange={(event) => onLanguageChange(event.target.value as "en" | "pt")}
-          className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          onValueChange={(value) => {
+            if (value === "en" || value === "pt") onLanguageChange(value)
+          }}
         >
-          <option value="en">English</option>
-          <option value="pt">Português</option>
-        </select>
+          <SelectTrigger id={languageSelectId} size="sm" aria-label={labels.language} className="min-w-32">
+            <SelectValue>{language === "pt" ? "Português" : "English"}</SelectValue>
+          </SelectTrigger>
+          <SelectContent align="end">
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="pt">Português</SelectItem>
+          </SelectContent>
+        </Select>
         <Button
           variant="outline"
           size="sm"

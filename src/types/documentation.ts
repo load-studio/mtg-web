@@ -24,6 +24,8 @@ export type Locale = {
     issue: string
     footer: string
     language: string
+    switchToLight: string
+    switchToDark: string
   }
   groups: string[]
   pages: Record<string, LocalePage>
