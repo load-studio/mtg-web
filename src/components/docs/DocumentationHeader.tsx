@@ -1,5 +1,5 @@
 import { useId } from "react"
-import { ChevronRight, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
