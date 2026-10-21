@@ -38,26 +38,19 @@ export const gettingStartedDocs: DocSection[] = [
         <p>Source catalogue: <a href="https://openterraingen.fandom.com/wiki/OTG_Presets" target="_blank" rel="noreferrer">OTG Presets on the Open Terrain Generator Wiki</a>.</p>
         <h2>Team OTG</h2>
         <ul>
-          <li>
-            <strong>Default:</strong> a vanilla-like generation preset intended as a base for further customization.</li>
-          <li>
-            <strong>Vanilla Vistas:</strong> varied and picturesque terrain with a vanilla feel, balancing height variation with flatter areas for building.</li>
-          <li>
-            <strong>Biome Bundle:</strong> a mix of realistic and fantasy landscapes, custom biomes, trees, boulders, ruins, buildings, dungeons and other structures.</li>
-          <li>
-            <strong>Biome Bundle O' Plenty:</strong> a Biome Bundle variation designed around Biomes O' Plenty.</li>
-          <li>
-            <strong>Wildlands:</strong> detailed landscapes with climate zones, volcanoes, glaciers, craters and transitions between biomes.</li>
-          <li>
-            <strong>Skylands:</strong> interconnected floating islands above the void, with a lower-verticality variant also described in the catalogue.</li>
-          <li>
-            <strong>Flatlands:</strong> a superflat-style world with vanilla biomes.</li>
-          <li>
-            <strong>Void:</strong> a void world with a single floating island at spawn.</li>
-          <li>
-            <strong>Alien Jungle:</strong> colourful, unusual jungle biomes, primarily described as a dimension preset.</li>
-          <li>
-            <strong>Tutorial World:</strong> an example preset demonstrating climate groups, mountains, hills, plains, rivers and lakes.</li>
+          <li><strong>Default:</strong> a vanilla-like generation preset intended as a base for further customization.</li>
+        </ul>
+        <h2>MCPitman</h2>
+        <ul>
+          <li><strong>Vanilla Vistas:</strong> varied and picturesque terrain with a vanilla feel, balancing height variation with flatter areas for building.</li>
+          <li><strong>Biome Bundle:</strong> a mix of realistic and fantasy landscapes, custom biomes, trees, boulders, ruins, buildings, dungeons and other structures.</li>
+          <li><strong>Biome Bundle O' Plenty:</strong> a Biome Bundle variation designed around Biomes O' Plenty.</li>
+          <li><strong>Wildlands:</strong> detailed landscapes with climate zones, volcanoes, glaciers, craters and transitions between biomes.</li>
+          <li><strong>Skylands:</strong> interconnected floating islands above the void, with a lower-verticality variant also described in the catalogue.</li>
+          <li><strong>Flatlands:</strong> a superflat-style world with vanilla biomes.</li>
+          <li><strong>Void:</strong> a void world with a single floating island at spawn.</li>
+          <li><strong>Alien Jungle:</strong> colourful, unusual jungle biomes, primarily described as a dimension preset.</li>
+          <li><strong>Tutorial World:</strong> an example preset demonstrating climate groups, mountains, hills, plains, rivers and lakes.</li>
         </ul>
         <h2>Other community presets</h2>
         <ul>
