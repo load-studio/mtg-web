@@ -1,0 +1,110 @@
+{
+  "ui": {
+    "brand": "Documentação MTG",
+    "search": "Pesquisar páginas...",
+    "source": "Código-fonte",
+    "documentation": "Documentação",
+    "issue": "Editar ou reportar um problema",
+    "footer": "ModernTerrainGenerator · Paper 1.21.11",
+    "language": "Idioma"
+  },
+  "groups": [
+    "Introdução",
+    "Configuração",
+    "Conteúdo personalizado",
+    "Tutoriais",
+    "Referência"
+  ],
+  "pages": {
+    "overview": {
+      "title": "Visão geral",
+      "group": "Introdução",
+      "summary": "Conhece o MTG e a geração de mundos baseada em presets.",
+      "content": "O ModernTerrainGenerator (MTG) é um plugin de geração de mundos para Paper 1.21.11. Dá continuidade aos conceitos do OpenTerrainGenerator, adaptados ao Minecraft e Paper modernos.\n\n## O que podes configurar\n- Altura e volatilidade do terreno, massas de terra, oceanos e rios.\n- Distribuição, tamanho e raridade dos biomas.\n- Superfícies, recursos subterrâneos, plantas, lagos e decoração.\n- Objetos e estruturas BO3/BO4 quando suportados.\n\n## Compatibilidade\nEsta documentação destina-se ao MTG no Paper 1.21.11. As páginas antigas do OTG são referências históricas e não garantem compatibilidade com a versão atual."
+    },
+    "preset-catalog": {
+      "title": "Presets e compatibilidade",
+      "group": "Introdução",
+      "summary": "Descobre, avalia e migra presets para MTG 1.21.11.",
+      "content": "Um preset reúne ficheiros de configuração e, opcionalmente, objetos personalizados. O preset Default incluído no repositório é o melhor ponto de partida para verificar formatos.\n\n## Onde procurar\n- [Presets incluídos no MTG](https://github.com/StudioLoad/ModernTerrainGenerator/tree/main/resources/Presets)\n- [Releases do MTG](https://github.com/StudioLoad/ModernTerrainGenerator/releases)\n- [Catálogo original de presets OTG](https://openterraingen.fandom.com/wiki/OTG_Presets), apenas como referência histórica.\n\n## Verificar compatibilidade\n1. Confirma as versões do Minecraft e do OTG para as quais o preset foi criado.\n2. Faz uma cópia de segurança e testa num servidor Paper 1.21.11 separado.\n3. Verifica WorldConfig.ini, ficheiros .bc, filas de recursos e objetos.\n4. Atualiza identificadores antigos de blocos e biomas.\n5. Analisa os logs e testa chunks novos em vários biomas.\n6. Confirma a licença antes de redistribuir o preset."
+    },
+    "installation": {
+      "title": "Instalação",
+      "group": "Introdução",
+      "summary": "Instala o MTG num servidor Paper 1.21.11.",
+      "content": "## Requisitos\n- Servidor Minecraft Java com Paper 1.21.11.\n- Versão de Java suportada pelo Paper instalado.\n- Permissões para parar o servidor e instalar plugins.\n\n## Instalar o plugin\n1. Para o servidor.\n2. Transfere o JAR adequado nas [releases do GitHub](https://github.com/StudioLoad/ModernTerrainGenerator/releases).\n3. Coloca o JAR na pasta plugins.\n4. Inicia o servidor e verifica os erros na consola.\n5. Para novamente antes de editar configurações.\n\n## Verificar a instalação\nExecuta `/mtg help` para ver os comandos. Num mundo MTG, usa `/mtg preset` para consultar o preset ativo.\n\nFaz uma cópia de segurança antes de alterar o gerador. Os chunks existentes não são regenerados automaticamente."
+    },
+    "install-presets": {
+      "title": "Instalar presets",
+      "group": "Introdução",
+      "summary": "Adiciona um preset e utiliza-o ao criar um mundo MTG.",
+      "content": "Um preset contém a configuração do mundo, ficheiros de biomas e, opcionalmente, objetos personalizados.\n\n## Instalar um preset\n1. Para o servidor.\n2. Copia a pasta completa para a pasta Presets dos dados do plugin.\n3. Mantém WorldConfig.ini, WorldBiomes e WorldObjects, quando existirem.\n4. Confirma que os ficheiros referenciados estão presentes.\n5. Inicia o servidor e verifica os avisos.\n6. Cria um mundo novo com o gerador MTG e o preset pretendido.\n\nPresets OTG antigos podem precisar de conversão. Valida nomes de recursos, blocos, biomas e objetos para Minecraft 1.21.11. Faz uma cópia de segurança antes de alterar o gerador de um mundo existente."
+    },
+    "dimensions": {
+      "title": "Mundos e dimensões",
+      "group": "Introdução",
+      "summary": "Compreende a integração de geração de mundos sem configurações antigas de modpacks.",
+      "content": "O MTG é um plugin Paper e não utiliza a interface de criação de mundos do Forge nem os ficheiros de dimensões de modpacks antigos.\n\n## Escolher o gerador\nConfirma que o mundo foi criado com o gerador MTG. Instalar o plugin não ativa automaticamente o MTG em todos os mundos.\n\n```text\n/mtg preset\n```\n\n## Mundos separados\nCria mundos adicionais através do método suportado pelo teu servidor ou ferramenta de gestão de mundos. O comportamento do Nether e do End depende da configuração do Paper e da integração do gerador."
+    },
+    "commands": {
+      "title": "Comandos e permissões",
+      "group": "Referência",
+      "summary": "Comandos do plugin MTG para Paper.",
+      "content": "Executa `/mtg help` para listar comandos e `/mtg help comando` para consultar a utilização. A ajuda integrada é a referência para a versão instalada.\n\n## Comandos comuns\n| Comando | Função | Permissão |\n| --- | --- | --- |\n| `/mtg help [command/page]` | Lista os comandos e a ajuda. | `mtg.cmd.help` |\n| `/mtg preset` | Mostra o preset ativo. | `mtg.cmd.preset` |\n| `/mtg biome` | Consulta dados do bioma e do chunk. | `mtg.cmd.biome` |\n| `/mtg map biomes [width] [height] [threads]` | Exporta um mapa de biomas. | `mtg.cmd.map` |\n| `/mtg map terrain [width] [height] [threads]` | Exporta um mapa do terreno. | `mtg.cmd.map` |\n| `/mtg spawn <preset> <object> [location] [force]` | Gera um objeto personalizado. | `mtg.cmd.spawn` |\n| `/mtg tp <biome>` | Teletransporta para um bioma. | `mtg.cmd.tp` |\n| `/mtg export` | Exporta seleção WorldEdit como BO3. | `mtg.cmd.export` |\n\nOs subcomandos podem mudar entre versões. Consulta a ajuda do servidor."
+    },
+    "otg-config": {
+      "title": "Configuração global",
+      "group": "Configuração",
+      "summary": "Compreende a configuração global antiga sem assumir que existe no MTG.",
+      "content": "Versões antigas do OTG utilizavam um ficheiro global OTG.ini. Não cries este ficheiro sem confirmar que é utilizado pelo MTG 1.21.11.\n\n## SettingsMode\nO WorldConfig.ini pode conter a opção SettingsMode. A documentação antiga descreve:\n- `WriteAll`: escreve as configurações com comentários.\n- `WriteWithoutComments`: escreve as configurações sem comentários.\n- `WriteDisable`: lê as configurações sem as reescrever.\n\nUtiliza apenas valores aceites pela versão instalada e faz uma cópia de segurança antes de alterar o modo."
+    },
+    "worldconfig": {
+      "title": "WorldConfig.ini",
+      "group": "Configuração",
+      "summary": "Configurações globais do preset e da geração do mundo.",
+      "content": "O WorldConfig.ini é o principal ficheiro de configuração do preset. O preset Default incluído encontra-se em `resources/Presets/Default/WorldConfig.ini`.\n\n## O que controla\n- Identidade do preset, descrição e modo de escrita.\n- Modo, grupos e raridade dos biomas.\n- Massas de terra, oceanos, rios e distribuição de biomas.\n- Altura e volatilidade do terreno.\n- Funcionalidades globais suportadas pelo preset.\n\n## Editar em segurança\n1. Para o servidor antes de editar.\n2. Faz uma cópia de segurança do preset.\n3. Altera um grupo de opções de cada vez.\n4. Verifica os logs após reiniciar.\n5. Testa em chunks novos ou num mundo descartável.\n\nOs ficheiros do preset incluído têm prioridade sobre documentação antiga do OTG."
+    },
+    "biome-configs": {
+      "title": "Ficheiros de configuração de biomas",
+      "group": "Configuração",
+      "summary": "Configura o terreno, a superfície, o clima e os recursos de um bioma.",
+      "content": "Os ficheiros de configuração de biomas usam a extensão `.bc`. No preset Default ficam em `resources/Presets/Default/WorldBiomes`.\n\n## Áreas comuns\n- Identidade: categoria, tamanho, raridade, cor e regras de distribuição.\n- Terreno: altura, volatilidade e suavização.\n- Blocos: pedra, superfície, solo e substituições.\n- Clima: água, gelo, temperatura e humidade.\n- Recursos: minérios, plantas, vegetação, lagos e objetos personalizados.\n\nUtiliza identificadores modernos, como `minecraft:grass_block`. Ficheiros antigos podem conter nomes desatualizados, por isso valida-os antes de utilizar o preset."
+    },
+    "resource-queue": {
+      "title": "Fila de recursos",
+      "group": "Configuração",
+      "summary": "Controla a ordem de colocação dos recursos de decoração dos biomas.",
+      "content": "A fila de recursos de um bioma define a sequência de colocação durante a decoração. A ordem é importante, pois alguns recursos dependem do terreno ou de blocos colocados anteriormente.\n\n## Tipos comuns\nO formato herdado inclui recursos para minérios, plantas, erva, árvores, lagos, líquidos e objetos ou estruturas personalizados. Os parâmetros dependem da versão do MTG.\n\n## Conselhos práticos\n- Mantém cada recurso numa linha própria.\n- Confirma a ordem dos argumentos através de entradas funcionais do preset Default.\n- Utiliza identificadores modernos de blocos.\n- Depois de editar, verifica os logs e testa chunks novos."
+    },
+    "objects": {
+      "title": "Objetos e estruturas personalizadas",
+      "group": "Conteúdo personalizado",
+      "summary": "Utiliza objetos BO3 e BO4 para árvores, rochas, edifícios e estruturas.",
+      "content": "Os objetos personalizados descrevem blocos e metadados opcionais para colocar construções durante a geração ou através dos comandos do MTG.\n\n## Formatos\n- **BO3:** adequado a objetos mais simples e partes de construções.\n- **BO4:** suporta regras avançadas de estruturas, quando a versão e o preset são compatíveis.\n- **BO2:** formato antigo cujo suporte pode variar.\n\n## Estrutura ilustrativa\n```text\nMyPreset/\n├── WorldConfig.ini\n├── WorldBiomes/\n│   └── Plains.bc\n└── WorldObjects/\n    └── ExampleTree.bo3\n```\n\n## Gerar um objeto manualmente\n```text\n/mtg spawn <preset> <object> [location] [force]\n```\n\nExecuta `/mtg help spawn` para consultar a sintaxe. Testa objetos num mundo descartável antes de os utilizar na geração natural."
+    },
+    "create-preset": {
+      "title": "Criar um preset",
+      "group": "Tutoriais",
+      "summary": "Começa um preset novo a partir do preset Default incluído no MTG.",
+      "content": "A forma mais segura de começar é copiar o preset Default incluído no MTG.\n\n## Passos\n1. Copia `resources/Presets/Default` e mantém o original intacto.\n2. Atualiza Author, Description e outros campos de identidade no WorldConfig.ini.\n3. Altera poucas definições globais de cada vez.\n4. Ajusta um ficheiro .bc para testar terreno, superfície, clima ou recursos.\n5. Adiciona objetos BO3/BO4 suportados e testa-os manualmente.\n6. Cria um mundo de teste e verifica vários biomas, mapas e logs.\n\nTesta o preset num mundo descartável antes de o utilizar num servidor ativo."
+    },
+    "spawn-object": {
+      "title": "Tutorial: gerar um objeto personalizado",
+      "group": "Tutoriais",
+      "summary": "Cria, exporta, configura e testa um objeto personalizado.",
+      "content": "Este tutorial descreve um fluxo de trabalho para criar e testar uma árvore, rocha ou edifício personalizado.\n\n## 1. Construir e selecionar\nConstrói o objeto num mundo de teste e seleciona-o com uma versão compatível do WorldEdit.\n\n## 2. Exportar\nO MTG disponibiliza um comando para exportar a seleção atual como BO3.\n\n```text\n/mtg export\n```\n\nConfirma a localização do ficheiro e verifica as permissões e a ajuda do comando se a exportação falhar.\n\n## 3. Instalar e testar\nCopia o BO3 para a pasta WorldObjects do preset. Depois testa-o manualmente:\n\n```text\n/mtg spawn <preset> <object> [location] [force]\n```\n\nQuando a colocação manual funcionar, configura a geração natural com os recursos suportados pelo preset."
+    },
+    "image-world": {
+      "title": "Criar um mundo a partir de uma imagem",
+      "group": "Tutoriais",
+      "summary": "Utiliza cores de biomas como entrada de mapa quando o modo FromImage é suportado.",
+      "content": "A geração por imagem pode utilizar um mapa com cores específicas para definir a distribuição de biomas. Confirma que o modo FromImage é suportado pela versão do MTG instalada.\n\n## Preparar o mapa\n1. Define um BiomeColor único para cada bioma.\n2. Cria um PNG RGB com cores exatas, sem transparência nem anti-aliasing.\n3. Utiliza bordas nítidas para evitar cores inválidas.\n4. Coloca a imagem no caminho esperado e configura as opções.\n5. Gera um mundo pequeno para testar orientação e deslocamentos.\n\n## Exemplo ilustrativo\n```ini\nBiomeMode: FromImage\nImageMode: Mirror\nImageFile: map.png\nImageOrientation: West\nImageFillBiome: Ocean\nImageXOffset: 0\nImageZOffset: 0\n```\n\nA orientação e o bioma de preenchimento dependem do mapa. Testa antes de gerar áreas grandes."
+    },
+    "tools": {
+      "title": "Ferramentas e recursos",
+      "group": "Referência",
+      "summary": "Recursos úteis para criadores de presets e administradores de servidores.",
+      "content": "- [Código-fonte do ModernTerrainGenerator](https://github.com/StudioLoad/ModernTerrainGenerator): implementação e presets incluídos.\n- [Releases do MTG](https://github.com/StudioLoad/ModernTerrainGenerator/releases): JARs e notas das versões.\n- [WorldEdit](https://github.com/EngineHub/WorldEdit): ferramentas de seleção e construção.\n- [Lista original de presets OTG](https://openterraingen.fandom.com/wiki/OTG_Presets): referência histórica.\n- [Reportar um erro](https://github.com/StudioLoad/ModernTerrainGenerator/issues): inclui logs, versão e passos para reproduzir.\n\nPresets e ferramentas para Minecraft 1.12 ou 1.16 podem precisar de conversão. Verifica as licenças antes de redistribuir recursos de terceiros."
+    }
+  }
+}

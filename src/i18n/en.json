@@ -1,0 +1,95 @@
+{
+  "ui": {
+    "brand": "MTG Documentation",
+    "search": "Search pages...",
+    "source": "Source",
+    "documentation": "Documentation",
+    "issue": "Edit or report an issue",
+    "footer": "ModernTerrainGenerator · Paper 1.21.11",
+    "language": "Language"
+  },
+  "groups": [
+    "Getting started",
+    "Configuration",
+    "Custom content",
+    "Tutorials",
+    "Reference"
+  ],
+  "pages": {
+    "overview": {
+      "title": "Overview",
+      "group": "Getting started",
+      "summary": "What MTG is and how its preset-driven world generation works."
+    },
+    "preset-catalog": {
+      "title": "Presets and Compatibility",
+      "group": "Getting started",
+      "summary": "Find, evaluate, and migrate community presets for MTG 1.21.11."
+    },
+    "installation": {
+      "title": "Installation",
+      "group": "Getting started",
+      "summary": "Install MTG on a Paper 1.21.11 server."
+    },
+    "install-presets": {
+      "title": "Installing Presets",
+      "group": "Getting started",
+      "summary": "Add a preset folder and use it when creating an MTG world."
+    },
+    "dimensions": {
+      "title": "Worlds and Dimensions",
+      "group": "Getting started",
+      "summary": "Understand world-generator scope without legacy modpack setup."
+    },
+    "commands": {
+      "title": "Commands and Permissions",
+      "group": "Reference",
+      "summary": "MTG commands registered by the Paper plugin."
+    },
+    "otg-config": {
+      "title": "Global Configuration",
+      "group": "Configuration",
+      "summary": "Understand legacy global configuration without assuming it exists in MTG."
+    },
+    "worldconfig": {
+      "title": "WorldConfig.ini",
+      "group": "Configuration",
+      "summary": "Settings affecting the whole preset and world generation."
+    },
+    "biome-configs": {
+      "title": "Biome Configuration Files",
+      "group": "Configuration",
+      "summary": "Configure terrain, surface, climate, and resources for a biome."
+    },
+    "resource-queue": {
+      "title": "Resource Queue",
+      "group": "Configuration",
+      "summary": "Control the order in which biome decoration resources are placed."
+    },
+    "objects": {
+      "title": "Custom Objects and Structures",
+      "group": "Custom content",
+      "summary": "Use BO3 and BO4 objects for trees, rocks, buildings, and larger structures."
+    },
+    "create-preset": {
+      "title": "Creating a Preset",
+      "group": "Tutorials",
+      "summary": "Start a new preset from MTG's bundled Default preset."
+    },
+    "spawn-object": {
+      "title": "Tutorial: Spawning a Custom Object",
+      "group": "Tutorials",
+      "summary": "Build, export, configure, and test a custom object."
+    },
+    "image-world": {
+      "title": "Creating a World from an Image",
+      "group": "Tutorials",
+      "summary": "Use biome colours as a map input where FromImage mode is supported."
+    },
+    "tools": {
+      "title": "Tools and Resources",
+      "group": "Reference",
+      "summary": "Useful starting points for preset makers and server administrators."
+    }
+  }
+}
