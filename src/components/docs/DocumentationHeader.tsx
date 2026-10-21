@@ -1,5 +1,5 @@
 import { useId } from "react"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -18,6 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Toggle } from "@/components/ui/toggle"
+import { useTheme } from "@/components/theme-provider"
 import type { Locale } from "@/types/documentation"
 
 type DocumentationHeaderProps = {
@@ -36,6 +38,8 @@ export function DocumentationHeader({
   onNavigate,
 }: DocumentationHeaderProps) {
   const languageSelectId = useId()
+  const { theme, setTheme } = useTheme()
+  const isDark = theme === "dark"
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
@@ -61,6 +65,17 @@ export function DocumentationHeader({
         </BreadcrumbList>
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-2">
+        <Toggle
+          type="button"
+          variant="outline"
+          size="sm"
+          pressed={isDark}
+          onPressedChange={(pressed) => setTheme(pressed ? "dark" : "light")}
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
+        </Toggle>
         <label htmlFor={languageSelectId} className="sr-only">
           {labels.language}
         </label>
@@ -71,7 +86,7 @@ export function DocumentationHeader({
           }}
         >
           <SelectTrigger id={languageSelectId} size="sm" aria-label={labels.language} className="min-w-32">
-            <SelectValue />
+            <SelectValue>{language === "pt" ? "Português" : "English"}</SelectValue>
           </SelectTrigger>
           <SelectContent align="end">
             <SelectItem value="en">English</SelectItem>
