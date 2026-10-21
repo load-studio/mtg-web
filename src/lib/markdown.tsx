@@ -1,0 +1,207 @@
+import type { ReactNode } from "react"
+import { DocumentationCode } from "@/components/docs/DocumentationCode"
+
+function renderInline(value: string, keyPrefix: string): ReactNode[] {
+  const parts = value
+    .split(/(`[^`]+`|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g)
+    .filter(Boolean)
+
+  return parts.map((part, index) => {
+    const key = `${keyPrefix}-${index}`
+
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={key}>{part.slice(1, -1)}</code>
+    }
+
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={key}>{part.slice(2, -2)}</strong>
+    }
+
+    const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (link) {
+      return (
+        <a key={key} href={link[2]} target="_blank" rel="noreferrer">
+          {link[1]}
+        </a>
+      )
+    }
+
+    return part
+  })
+}
+
+function parseTableRow(line: string): string[] {
+  return line
+    .trim()
+    .replace(/^\|/, "")
+    .replace(/\|$/, "")
+    .split("|")
+    .map((cell) => cell.trim())
+}
+
+function isTableSeparator(line: string): boolean {
+  const cells = parseTableRow(line)
+  return cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell))
+}
+
+export function renderMarkdown(markdown: string): ReactNode {
+  const lines = markdown.split("\n")
+  const blocks: ReactNode[] = []
+  let paragraph: string[] = []
+  let listItems: string[] = []
+  let listType: "ul" | "ol" | null = null
+  let codeLines: string[] = []
+  let codeLanguage = ""
+  let isInsideCodeBlock = false
+
+  function flushParagraph() {
+    if (paragraph.length === 0) return
+
+    const key = `paragraph-${blocks.length}`
+    blocks.push(<p key={key}>{renderInline(paragraph.join(" "), key)}</p>)
+    paragraph = []
+  }
+
+  function flushList() {
+    if (listItems.length === 0 || listType === null) return
+
+    const Tag = listType
+    blocks.push(
+      <Tag key={`list-${blocks.length}`}>
+        {listItems.map((item, index) => (
+          <li key={index}>{renderInline(item, `list-item-${blocks.length}-${index}`)}</li>
+        ))}
+      </Tag>,
+    )
+
+    listItems = []
+    listType = null
+  }
+
+  function flushCodeBlock() {
+    blocks.push(
+      <DocumentationCode key={`code-${blocks.length}`} title={codeLanguage || undefined}>
+        {codeLines.join("\n")}
+      </DocumentationCode>,
+    )
+    codeLines = []
+    codeLanguage = ""
+  }
+
+  function flushPendingText() {
+    flushParagraph()
+    flushList()
+  }
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index]
+
+    if (line.startsWith("```")) {
+      flushPendingText()
+
+      if (isInsideCodeBlock) {
+        flushCodeBlock()
+        isInsideCodeBlock = false
+      } else {
+        isInsideCodeBlock = true
+        codeLanguage = line.slice(3).trim()
+      }
+
+      continue
+    }
+
+    if (isInsideCodeBlock) {
+      codeLines.push(line)
+      continue
+    }
+
+    if (!line.trim()) {
+      flushPendingText()
+      continue
+    }
+
+    if (line.trimStart().startsWith("|")) {
+      flushPendingText()
+
+      const tableLines: string[] = [line]
+      while (index + 1 < lines.length && lines[index + 1].trimStart().startsWith("|")) {
+        tableLines.push(lines[index + 1])
+        index += 1
+      }
+
+      const rows = tableLines.filter((row) => !isTableSeparator(row)).map(parseTableRow)
+      const [header, ...body] = rows
+
+      if (header?.length) {
+        blocks.push(
+          <div className="my-4 overflow-x-auto" key={`table-${blocks.length}`}>
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b">
+                  {header.map((cell, cellIndex) => (
+                    <th className="px-3 py-2 font-semibold" key={cellIndex}>
+                      {renderInline(cell, `table-header-${blocks.length}-${cellIndex}`)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {body.map((row, rowIndex) => (
+                  <tr className="border-b align-top" key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                      <td className="px-3 py-2" key={cellIndex}>
+                        {renderInline(cell, `table-cell-${blocks.length}-${rowIndex}-${cellIndex}`)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>,
+        )
+      }
+
+      continue
+    }
+
+    if (line.startsWith("### ")) {
+      flushPendingText()
+      blocks.push(<h3 key={`heading-${blocks.length}`}>{line.slice(4)}</h3>)
+      continue
+    }
+
+    if (line.startsWith("## ") || line.startsWith("# ")) {
+      flushPendingText()
+      const heading = line.startsWith("## ") ? line.slice(3) : line.slice(2)
+      blocks.push(<h2 key={`heading-${blocks.length}`}>{heading}</h2>)
+      continue
+    }
+
+    const unorderedItem = line.match(/^\s*[-*]\s+(.+)$/)
+    const orderedItem = line.match(/^\s*\d+\.\s+(.+)$/)
+
+    if (unorderedItem || orderedItem) {
+      flushParagraph()
+
+      const nextListType = unorderedItem ? "ul" : "ol"
+      if (listType !== null && listType !== nextListType) {
+        flushList()
+      }
+
+      listType = nextListType
+      listItems.push((unorderedItem ?? orderedItem)![1])
+      continue
+    }
+
+    flushList()
+    paragraph.push(line.trim())
+  }
+
+  flushPendingText()
+
+  if (isInsideCodeBlock) {
+    flushCodeBlock()
+  }
+
+  return <>{blocks}</>
+}
