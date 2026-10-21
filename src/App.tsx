@@ -47,10 +47,9 @@ export function App() {
           title: translated?.title ?? document.title,
           group: translated?.group ?? document.group,
           summary: translated?.summary ?? document.summary,
-          content:
-            language === "pt"
-              ? renderMarkdown(translated?.content ?? "")
-              : document.content,
+          content: translated?.content
+            ? renderMarkdown(translated.content)
+            : document.content,
         }
       }),
     [language, locale],
