@@ -1,135 +1,103 @@
-import { createElement, useEffect, useMemo, useState } from "react"
-import type { ReactNode } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { DocumentationArticle } from "@/components/docs/DocumentationArticle"
+import { DocumentationHeader } from "@/components/docs/DocumentationHeader"
+import { DocumentationSidebar } from "@/components/docs/DocumentationSidebar"
 import en from "@/i18n/en.json"
 import pt from "@/i18n/pt.json"
-import { BookOpen, ChevronRight, ExternalLink, FileCode2, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarGroup, SidebarGroupLabel, SidebarTrigger } from "@/components/ui/sidebar"
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import { CodeBlock, CodeBlockHeader, CodeBlockTitle, CodeBlockActions, CodeBlockCopyButton, CodeBlockContent } from "@/components/ui/code-block"
+import { docs } from "@/data/documentation"
+import { getDocumentIdFromPath } from "@/lib/documentation-routing"
+import { renderMarkdown } from "@/lib/markdown"
+import type { DocSection, Locale } from "@/types/documentation"
 
-type DocSection = { id: string; title: string; group: string; summary: string; content: ReactNode }
-
-type LocalePage = { title: string; group: string; summary: string; content?: string }
-type Locale = { ui: { brand: string; search: string; source: string; documentation: string; issue: string; footer: string; language: string }; groups: string[]; pages: Record<string, LocalePage> }
-
-function renderInline(value: string, keyPrefix: string): ReactNode[] {
- return value.split(/(`[^`]+`|\[[^\]]+\]\([^)]+\))/g).filter(Boolean).map((part, index) => {
-  const key = `${keyPrefix}-${index}`
-  if (part.startsWith("`") && part.endsWith("`")) return <code key={key}>{part.slice(1, -1)}</code>
-  const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
-  if (link) return <a key={key} href={link[2]} target="_blank" rel="noreferrer">{link[1]}</a>
-  return part
- })
+const locales: Record<"en" | "pt", Locale> = {
+  en,
+  pt,
 }
 
-function renderMarkdown(markdown: string): ReactNode {
- const lines = markdown.split("\n")
- const blocks: ReactNode[] = []
- let paragraph: string[] = []
- let list: string[] = []
- let listType: "ul" | "ol" | null = null
- let code: string[] = []
- let inCode = false
- let codeLang = ""
- const flushParagraph = () => {
-  if (paragraph.length) { blocks.push(<p key={`p-${blocks.length}`}>{renderInline(paragraph.join(" "), `p-${blocks.length}`)}</p>); paragraph = [] }
- }
- const flushList = () => {
-  if (list.length && listType) {
-   const Tag = listType
-   blocks.push(createElement(Tag, { key: `list-${blocks.length}` }, ...list.map((item, i) => createElement("li", { key: i }, ...renderInline(item, `li-${blocks.length}-${i}`)))))
-  }
-  list = []; listType = null
- }
- const flushCode = () => {
-  blocks.push(<Code key={`code-${blocks.length}`} title={codeLang || undefined}>{code.join("\n")}</Code>)
-  code = []; codeLang = ""
- }
- for (const line of lines) {
-  if (line.startsWith("```")) {
-   flushParagraph(); flushList()
-   if (inCode) { flushCode(); inCode = false } else { inCode = true; codeLang = line.slice(3).trim() }
-   continue
-  }
-  if (inCode) { code.push(line); continue }
-  if (!line.trim()) { flushParagraph(); flushList(); continue }
-  if (line.startsWith("## ")) { flushParagraph(); flushList(); blocks.push(<h2 key={`h-${blocks.length}`}>{line.slice(3)}</h2>); continue }
-  if (line.startsWith("# ")) { flushParagraph(); flushList(); blocks.push(<h2 key={`h-${blocks.length}`}>{line.slice(2)}</h2>); continue }
-  if (line.startsWith("|")) { flushParagraph(); flushList(); blocks.push(<p key={`table-${blocks.length}`} className="font-mono text-sm">{renderInline(line.replaceAll("|", " · "), `table-${blocks.length}`)}</p>); continue }
-  const unordered = line.match(/^\s*[-*]\s+(.+)$/)
-  const ordered = line.match(/^\s*\d+\.\s+(.+)$/)
-  if (unordered || ordered) {
-   flushParagraph()
-   const nextType = unordered ? "ul" : "ol"
-   if (listType && listType !== nextType) flushList()
-   listType = nextType
-   list.push((unordered ?? ordered)![1])
-   continue
-  }
-  flushList()
-  paragraph.push(line.trim())
- }
- flushParagraph(); flushList()
- if (inCode) flushCode()
- return <>{blocks}</>
-}
-
-const wiki = "https://openterraingen.fandom.com/wiki/"
-function Code({ title, children }: { title?: string; children: string }) { return <CodeBlock className="my-4">{title && <CodeBlockHeader><CodeBlockTitle>{title}</CodeBlockTitle><CodeBlockActions><CodeBlockCopyButton value={children} /></CodeBlockActions></CodeBlockHeader>}<CodeBlockContent>{children}</CodeBlockContent></CodeBlock> }
-function Figure({ src, alt, caption }: { src: string; alt: string; caption?: string }) { return <figure className="my-6 space-y-2"><a href={src} target="_blank" rel="noreferrer"><img src={src} alt={alt} loading="lazy" className="h-auto max-w-full rounded-md border" /></a>{caption && <figcaption className="text-sm text-muted-foreground">{caption}</figcaption>}</figure> }
-const docs: DocSection[] = [
-{ id:"overview", title:"Overview", group:"Getting started", summary:"What MTG is and how its preset-driven world generation works.", content:<><p>ModernTerrainGenerator (MTG) is a data-driven world generation plugin for <strong>Paper 1.21.11</strong>. It continues the OpenTerrainGenerator configuration and world-generation concepts, adapted for modern Minecraft and Paper.</p><p>MTG separates the generation engine from its presets. A preset describes terrain, biome placement, surface blocks, resources, and custom objects used when generating new chunks.</p><h2>What you can configure</h2><ul><li>Terrain height, volatility, landmasses, oceans, and rivers.</li><li>Biome groups, biome size and rarity, islands, and borders.</li><li>Biome surfaces, underground resources, plants, lakes, and decoration.</li><li>Custom objects and structures defined with BO3 and BO4 files where supported.</li><li>Biome and terrain maps for inspecting generated layouts.</li></ul><h2>Compatibility</h2><p>This documentation targets MTG on Paper 1.21.11 only. It does not cover Forge, Fabric, client-side installation, mod loaders, or modpack-specific dimension configuration. Older OTG pages describe earlier versions; use this guide and the preset files shipped with MTG as the reference for current behaviour.</p><p>Project: <a href="https://github.com/StudioLoad/ModernTerrainGenerator" target="_blank" rel="noreferrer">StudioLoad/ModernTerrainGenerator</a>.</p><Figure src="https://cdn-loadmc.rodriaum.com/assets/designs/mtg-logo.png" alt="ModernTerrainGenerator logo" caption="ModernTerrainGenerator" /></> },
-{ id:"preset-catalog", title:"Presets and Compatibility", group:"Getting started", summary:"Find, evaluate, and migrate community presets for MTG 1.21.11.", content:<><p>A preset is a collection of configuration files and optional custom objects. The MTG repository includes a <code>Default</code> preset under <code>resources/Presets/Default</code>; use it as the compatibility baseline for your installed build.</p><h2>Where to start</h2><ul><li><a href="https://github.com/StudioLoad/ModernTerrainGenerator/tree/main/resources/Presets" target="_blank" rel="noreferrer">Presets bundled with MTG</a> - the most reliable place to check file formats for this repository revision.</li><li><a href={wiki+"OTG_Presets"} target="_blank" rel="noreferrer">Original OTG Presets catalogue</a> - useful for discovering legacy presets, not a compatibility guarantee.</li><li><a href="https://github.com/StudioLoad/ModernTerrainGenerator/releases" target="_blank" rel="noreferrer">MTG releases</a> - check the release and notes that match your server version.</li></ul><h2>Check a community preset before installing</h2><ol><li>Identify which OTG and Minecraft version the preset was written for.</li><li>Make a backup and test the preset in a separate Paper 1.21.11 server.</li><li>Check <code>WorldConfig.ini</code>, every <code>.bc</code> file, resource queue entries, and custom objects.</li><li>Replace outdated block and biome identifiers with supported 1.21.11 identifiers where necessary.</li><li>Inspect server logs and generate fresh chunks in different biomes.</li><li>Verify the preset's licence and obtain permission where required before republishing it.</li></ol><p>Presets made for Forge, modded biomes, or older Minecraft releases may depend on blocks, biomes, or dimensions that do not exist on a Paper-only server. Remove those dependencies or choose a different preset; do not assume that copying a folder is enough.</p><h2>Compatibility notes</h2><p>Keep an untouched copy of the original preset and record every migration change. A preset can load without errors and still generate the wrong terrain, so check the world visually and test custom structures as well.</p></> },
-{ id:"installation", title:"Installation", group:"Getting started", summary:"Install MTG on a Paper 1.21.11 server.", content:<><h2>Requirements</h2><ul><li>A Minecraft Java server running <strong>Paper 1.21.11</strong>.</li><li>A Java runtime supported by that Paper build.</li><li>Permission to stop the server and install plugins.</li></ul><h2>Install the plugin</h2><ol><li>Stop the server cleanly.</li><li>Download the MTG release JAR that explicitly targets Paper 1.21.11 from <a href="https://github.com/StudioLoad/ModernTerrainGenerator/releases" target="_blank" rel="noreferrer">GitHub Releases</a>.</li><li>Place the JAR in the server's <code>plugins</code> directory.</li><li>Start the server and check the console for plugin loading errors.</li><li>Stop the server before editing preset files or making a backup.</li></ol><p>MTG is a Paper plugin. Do not place its plugin JAR in a <code>mods</code> directory.</p><h2>Verify the installation</h2><p>Run <code>/mtg help</code> in-game or from the console to view available commands. In an MTG world, run <code>/mtg preset</code> to view the active preset name and description.</p><h2>Back up first</h2><p>World-generation settings affect newly generated chunks. Make a full backup before changing presets. Changing a preset does not retroactively regenerate chunks that already exist.</p></> },
-{ id:"install-presets", title:"Installing Presets", group:"Getting started", summary:"Add a preset folder and use it when creating an MTG world.", content:<><p>A preset is a directory containing a world configuration, biome configuration files, and optionally custom objects. MTG ships with a <code>Default</code> preset that can be used as a starting point.</p><h2>Preset directory</h2><p>The preset loader reads preset folders from the plugin's data directory. The bundled source files are in <code>resources/Presets/Default</code>. Confirm the exact runtime data path in the installed build before copying files.</p><h2>Install a preset</h2><ol><li>Stop the server.</li><li>Copy the complete preset folder into the plugin's <code>Presets</code> directory. Keep the internal structure, including <code>WorldConfig.ini</code>, <code>WorldBiomes</code>, and any <code>WorldObjects</code> directory.</li><li>Check that the folder name is unique and all referenced biome and object files exist.</li><li>Start the server and inspect the console for configuration warnings.</li><li>Configure a newly created world to use MTG and the desired preset using the world-creation workflow supported by your server.</li></ol><p>Do not assume an OTG 1.12 or 1.16 preset works unchanged. Validate resource names, Minecraft block identifiers, biome names, and object configuration against MTG and Minecraft 1.21.11.</p><h2>Existing worlds</h2><p>Back up the world before changing its generator. Existing chunks remain; newly generated areas may differ if the generator or preset changes.</p></> },
-{ id:"dimensions", title:"Worlds and Dimensions", group:"Getting started", summary:"Understand world-generator scope without legacy modpack setup.", content:<><p>MTG is a Paper plugin and configures terrain through its preset and world-generation integration. It does not use the Forge world-creation GUI or Forge modpack dimension files described in older OTG articles.</p><h2>Choosing the generator</h2><p>Ensure that the target world is created with MTG's generator. Installing the plugin does not mean every world automatically uses MTG. The preset command reports whether MTG is enabled in the current world.</p><Code title="Check the active preset">/mtg preset</Code><h2>Separate worlds</h2><p>For separate environments, create and configure worlds with the Paper setup or a compatible world-management workflow. The exact creation command depends on how your server provisions worlds; use that workflow's current documentation rather than old Forge-only examples.</p><p>Nether and End behaviour depends on Paper configuration and the generator integration. Do not assume legacy OTG dimension GUI or portal options exist in MTG.</p></> },
-{ id:"commands", title:"Commands and Permissions", group:"Reference", summary:"MTG commands registered by the Paper plugin.", content:<><p>Use <code>/mtg help</code> to list available commands and <code>/mtg help command</code> for usage. Commands are permission-gated by the permissions defined in the plugin.</p><h2>Common commands</h2><div className="overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b"><th className="py-2 pr-4">Command</th><th className="py-2 pr-4">Purpose</th><th className="py-2">Permission</th></tr></thead><tbody>{[["/mtg help [command/page]","List commands or show detailed help.","mtg.cmd.help"],["/mtg preset","Show the current world's active preset.","mtg.cmd.preset"],["/mtg biome","Inspect biome and chunk block information.","mtg.cmd.biome"],["/mtg map biomes [width] [height] [threads]","Export a biome-layout image.","mtg.cmd.map"],["/mtg map terrain [width] [height] [threads]","Export a shaded terrain image.","mtg.cmd.map"],["/mtg spawn <preset> <object> [location] [force]","Spawn a custom object.","mtg.cmd.spawn"],["/mtg tp <biome>","Teleport to a biome by name or ID within the search range.","mtg.cmd.tp"],["/mtg export","Export a WorldEdit selection as a BO3.","mtg.cmd.export"],["/mtg edit","Edit preset data.","mtg.cmd.edit"],["/mtg structure","Show structure information.","mtg.cmd.structure"],["/mtg region","Configure the region used by MTG commands.","mtg.cmd.region"],["/mtg flush","Flush MTG data.","mtg.cmd.flush"],["/mtg data","Modify MTG data.","mtg.cmd.data"]].map(row=><tr className="border-b align-top" key={row[0]}><td className="py-2 pr-4 font-mono text-xs">{row[0]}</td><td className="py-2 pr-4">{row[1]}</td><td className="py-2 font-mono text-xs">{row[2]}</td></tr>)}</tbody></table></div><p>Subcommands and argument shapes can change between builds. Built-in help is authoritative for the installed release.</p></> },
-{ id:"otg-config", title:"Global Configuration", group:"Configuration", summary:"Understand legacy global configuration without assuming it exists in MTG.", content:<><p>Older OTG releases used a global <code>OTG.ini</code> for logging and configuration-writing behaviour. Do not create this file blindly on MTG 1.21.11. First check the files generated by your installed build.</p><h2>Settings mode</h2><p>Preset <code>WorldConfig.ini</code> files include <code>SettingsMode</code>. The bundled Default preset sets it to <code>WriteWithoutComments</code>. Original OTG documentation describes the common modes:</p><ul><li><code>WriteAll</code>: write settings with help comments.</li><li><code>WriteWithoutComments</code>: write settings without help comments.</li><li><code>WriteDisable</code>: read settings without rewriting them.</li></ul><p>Use only values accepted by your installed build. Back up the preset before changing write modes.</p><p>Background reference: <a href={wiki+"OTG.ini_%281.16%29"} target="_blank" rel="noreferrer">OTG.ini (1.16)</a>. This is legacy documentation, not a complete MTG reference.</p></> },
-{ id:"worldconfig", title:"WorldConfig.ini", group:"Configuration", summary:"Settings affecting the whole preset and world generation.", content:<><p><code>WorldConfig.ini</code> is the main preset configuration. MTG's bundled Default preset is at <code>resources/Presets/Default/WorldConfig.ini</code> in the source repository.</p><h2>What it controls</h2><ul><li>Preset identity, description, and settings-writing behaviour.</li><li>Biome mode, generation depth, biome groups, and biome rarity.</li><li>Landmass sizes, ocean settings, rivers, and biome placement.</li><li>Terrain height and volatility settings.</li><li>Global feature and structure settings supported by the preset format.</li><li>Image-based biome generation settings where supported.</li></ul><h2>Example settings</h2><Code title="Excerpt from the bundled Default preset">{"SettingsMode: WriteWithoutComments\n\nAuthor: MC_Pitman\nDescription: The OTG default preset, which closely resembles the vanilla worldgen\nMajorVersion: 0\nMinorVersion: 0\n\nBiomeMode: Normal\nGenerationDepth: 10\nBiomeRarityScale: 100\n\nLandRarity: 99\nLandSize: 0\nForceLandAtSpawn: true\nOceanBiomeSize: 0\n\nRiversEnabled: true\nRandomRivers: true\nRiverRarity: 4\nRiverSize: 1"}</Code><p>These values illustrate the bundled preset and are not universal recommendations. Keep biome names and function syntax consistent with the preset files.</p><h2>Safe editing</h2><ol><li>Stop the server before editing.</li><li>Back up the whole preset directory.</li><li>Change one logical group of settings at a time.</li><li>Start the server and read logs for invalid settings or missing resources.</li><li>Test in newly generated chunks or a disposable world.</li></ol><p>Original reference: <a href={wiki+"WorldConfig.ini_1.16"} target="_blank" rel="noreferrer">WorldConfig.ini (1.16)</a>. Your MTG preset files take priority over the old wiki.</p></> },
-{ id:"biome-configs", title:"Biome Configuration Files", group:"Configuration", summary:"Configure terrain, surface, climate, and resources for a biome.", content:<><p>Biome configuration files use the <code>.bc</code> extension. In MTG's Default preset they are stored under <code>resources/Presets/Default/WorldBiomes</code>. Each file controls a biome or template biome, while global settings live in <code>WorldConfig.ini</code>.</p><h2>Common areas</h2><ul><li><strong>Identity and placement:</strong> biome categories and tags, size, rarity, colour, isle placement, and border rules.</li><li><strong>Terrain:</strong> biome height, volatility, smoothing, and custom height control.</li><li><strong>Blocks:</strong> stone, surface, ground, underwater surface, and replacement rules.</li><li><strong>Water and weather:</strong> water level, water and ice blocks, temperature, wetness, and visual values where supported.</li><li><strong>Resources:</strong> ores, plants, vegetation, lakes, structures, and custom objects through the resource queue.</li></ul><h2>Example</h2><Code title="Representative settings from Plains.bc">{"BiomeCategory: plains\nBiomeSize: 4\nBiomeRarity: 100\nBiomeColor: #8DB360\n\nBiomeHeight: 0.125\nBiomeVolatility: 0.05\nSmoothRadius: 2\n\nStoneBlock: minecraft:stone\nSurfaceBlock: minecraft:grass_block\nGroundBlock: minecraft:dirt\n\nBiomeTemperature: 0.8\nBiomeWetness: 0.4"}</Code><p>Modern Minecraft identifiers such as <code>minecraft:grass_block</code> are used in the bundled preset. Older files may contain outdated block or biome names; validate them before use.</p><p>Original reference: <a href={wiki+"Biome_Configs_%281.16%29"} target="_blank" rel="noreferrer">Biome Configs (1.16)</a>.</p></> },
-{ id:"resource-queue", title:"Resource Queue", group:"Configuration", summary:"Control the order in which biome decoration resources are placed.", content:<><p>The resource queue in a biome configuration defines the sequence of configured resources. Order matters: entries run as part of biome decoration, so resources that depend on terrain or previously placed blocks can behave differently when moved.</p><h2>Common resource families</h2><p>The inherited format includes resources for ores, underwater ores, veins, plants, grass, trees, lakes, liquid features, dungeons, and custom objects or structures. The exact set and parameter rules depend on the MTG build and its parser.</p><h2>Example from the Default preset</h2><Code title="Resource queue excerpt">{"Ore(minecraft:coal_ore,17,20,100.0,0,127,minecraft:stone)\nOre(minecraft:iron_ore,9,20,100.0,0,63,minecraft:stone)\nUnderGroundLake(25,60,2,5.0,0,49)\nSmallLake(minecraft:water,4,7.0,8,119)\nPlant(Poppy,1,100.0,0,128,minecraft:grass_block,minecraft:dirt)"}</Code><h2>Practical advice</h2><ul><li>Keep each resource on its own line.</li><li>Check argument order against a working entry in the shipped preset.</li><li>Use valid modern block identifiers and correct biome object names.</li><li>After editing, inspect logs and test newly generated chunks.</li></ul><p>Original reference: <a href={wiki+"Resource_Queue"} target="_blank" rel="noreferrer">Resource Queue</a>.</p></> },
-{ id:"objects", title:"Custom Objects and Structures", group:"Custom content", summary:"Use BO3 and BO4 objects for trees, rocks, buildings, and larger structures.", content:<><p>Custom objects are text-based descriptions of blocks and optional metadata used to place hand-built content during generation or with MTG commands. The inherited OTG format includes BO2, BO3, and BO4, but BO2 is legacy. Prefer BO3 for simpler objects and BO4 where your preset and MTG build support advanced structure features.</p><h2>BO3 and BO4</h2><ul><li><strong>BO3:</strong> a block object suitable for smaller objects and, through structure resources, linked parts of larger builds.</li><li><strong>BO4:</strong> supports advanced branching and structure placement rules. BO4 structures require a compatible preset structure mode; verify <code>CustomStructureType</code>.</li><li><strong>BO2:</strong> legacy support may vary. Test the exact MTG version before building new content around it.</li></ul><h2>Typical preset layout</h2><Code title="Illustrative preset tree">{"MyPreset/\n├── WorldConfig.ini\n├── WorldBiomes/\n│   └── Plains.bc\n└── WorldObjects/\n    ├── Trees/\n    │   └── ExampleTree.bo3\n    └── Structures/\n        └── ExampleHouse.bo4"}</Code><p>This layout is illustrative. Preserve the structure used by your actual preset and ensure the referenced object names match stored files.</p><h2>Spawn an object manually</h2><Code title="Command syntax">/mtg spawn &lt;preset&gt; &lt;object&gt; [location] [force]</Code><p>Run <code>/mtg help spawn</code> for the installed command syntax. The <code>global</code> preset argument checks global objects. Spawning a BO4 requires an MTG world and a preset configured for BO4 custom structures.</p><Figure src="https://static.wikia.nocookie.net/terraincontrol/images/9/99/Tree_1.jpg/revision/latest/scale-to-width-down/220?cb=20180127125132" alt="Example tree build from the original OpenTerrainGenerator tutorial" caption="Tree example from the original OTG custom-object tutorial (legacy instructions; image is illustrative)."/><Figure src="https://static.wikia.nocookie.net/terraincontrol/images/1/1d/Tree_2.jpg/revision/latest/scale-to-width-down/220?cb=20180127132542" alt="Example of selecting a custom tree object" caption="Source: Open Terrain Generator Wiki, “Tutorial: Spawning Custom Object” (community content is marked CC BY-SA on the source page)."/><p>References: <a href={wiki+"Custom_Objects_and_Structures_%28BO2%2FBO3%2FBO4_configs%29"} target="_blank" rel="noreferrer">Custom Objects and Structures</a> and <a href={wiki+"Tutorial%3A_Spawning_Custom_Object"} target="_blank" rel="noreferrer">Spawning a Custom Object tutorial</a>.</p></> },
-{ id:"create-preset", title:"Creating a Preset", group:"Tutorials", summary:"Start a new preset from MTG's bundled Default preset.", content:<><p>The safest starting point is the Default preset shipped with MTG. It contains a working world configuration and biome files using the format expected by that source revision.</p><h2>1. Copy Default</h2><p>Copy <code>resources/Presets/Default</code> for development, or copy the generated plugin-data preset after first startup. Give the copy a clear name and keep the original unchanged.</p><h2>2. Set preset identity</h2><p>In <code>WorldConfig.ini</code>, update identity fields such as <code>Author</code>, <code>Description</code>, and version values. Use the existing file as the syntax reference.</p><h2>3. Edit global generation</h2><p>Start with a few world settings, such as biome grouping, land and ocean size, rivers, or terrain height. Changing too many values at once makes issues harder to diagnose.</p><h2>4. Edit a biome</h2><p>Choose a <code>.bc</code> file under <code>WorldBiomes</code> and adjust terrain, surface, climate, or the resource queue. Check references before renaming biomes.</p><h2>5. Add custom objects</h2><p>Store BO3/BO4 files in the preset object directory and reference them from supported resources or structure settings. Test an object manually before enabling frequent generation.</p><h2>6. Test in a clean world</h2><p>Create a disposable test world. Check several biomes, use <code>/mtg map biomes</code> and <code>/mtg map terrain</code>, and inspect logs before using the preset on a live server.</p><p>Original reference: <a href={wiki+"Creating_your_own_preset"} target="_blank" rel="noreferrer">Creating your own preset</a>.</p></> },
-{ id:"spawn-object", title:"Tutorial: Spawning a Custom Object", group:"Tutorials", summary:"Build, export, configure, and test a custom object.", content:<><p>This tutorial outlines the workflow for a small custom object such as a tree, boulder, or building. Legacy OTG tools and exact export commands may differ, so use commands available in your MTG build.</p><h2>1. Build the object</h2><p>Build in a test world using the blocks you intend to export. Keep dimensions within the limits supported by the object type and placement resource.</p><h2>2. Export the selection</h2><p>MTG declares a WorldEdit soft dependency and provides an export command for the current WorldEdit selection as BO3. Install a compatible WorldEdit build if required, select the object, then run:</p><Code title="Export the selection">/mtg export</Code><p>Check command output for the exported file location. If unavailable, verify plugin version, permissions, WorldEdit, and <code>/mtg help export</code>.</p><h2>3. Add the object to the preset</h2><p>Move or copy the exported BO3 into the intended preset's <code>WorldObjects</code> directory.</p><h2>4. Spawn it for testing</h2><Code title="Spawn syntax">/mtg spawn &lt;preset&gt; &lt;object&gt; [location] [force]</Code><p>Use the preset and object names and an explicit location when needed. Test with force disabled first.</p><h2>5. Add natural spawning</h2><p>When manual placement works, add the suitable <code>Tree(...)</code>, <code>CustomObject(...)</code>, or <code>CustomStructure(...)</code> entry to a biome configuration if supported. Validate syntax against working resources in Default.</p><p>Original reference: <a href={wiki+"Tutorial%3A_Spawning_Custom_Object"} target="_blank" rel="noreferrer">Tutorial: Spawning Custom Object</a>.</p></> },
-{ id:"image-world", title:"Creating a World from an Image", group:"Tutorials", summary:"Use biome colours as a map input where FromImage mode is supported.", content:<><p>Image-based biome generation can use a colour-coded image to define biome placement. The inherited format exposes settings such as <code>BiomeMode</code>, <code>ImageMode</code>, <code>ImageFile</code>, <code>ImageOrientation</code>, and image offsets. Confirm support and exact behaviour in the MTG build before relying on it for production.</p><h2>Prepare the map</h2><ol><li>Set a unique <code>BiomeColor</code> for each biome.</li><li>Create an RGB PNG using those exact colours. Disable anti-aliasing, blur, transparency, and lossy compression.</li><li>Use a hard-edged pencil tool. Colours that do not match may resolve to the fill biome.</li><li>Place the image in the path expected by the preset and set the image options.</li><li>Generate a small test world to confirm orientation, offsets, and behaviour beyond image edges.</li></ol><h2>Example settings</h2><Code title="Illustrative WorldConfig.ini excerpt">{"BiomeMode: FromImage\nImageMode: Mirror\nImageFile: map.png\nImageOrientation: West\nImageFillBiome: Ocean\nImageXOffset: 0\nImageZOffset: 0"}</Code><p>The correct orientation and fill biome depend on your map. Test before generating large areas.</p><p>For a visual example of map-based biome generation, see the original <a href={wiki+"Creating_a_world_from_an_image"} target="_blank" rel="noreferrer">image-based world tutorial</a>. Its exact settings and screenshots describe legacy OTG and should not be treated as confirmed MTG 1.21.11 behaviour.</p><p>Original reference: <a href={wiki+"Creating_a_world_from_an_image"} target="_blank" rel="noreferrer">Creating a world from an image</a>.</p></> },
-{ id:"tools", title:"Tools and Resources", group:"Reference", summary:"Useful starting points for preset makers and server administrators.", content:<><ul><li><a href="https://github.com/StudioLoad/ModernTerrainGenerator" target="_blank" rel="noreferrer">ModernTerrainGenerator source code</a> - implementation and bundled presets.</li><li><a href="https://github.com/StudioLoad/ModernTerrainGenerator/releases" target="_blank" rel="noreferrer">MTG releases</a> - release JARs and version notes.</li><li><a href="https://github.com/EngineHub/WorldEdit" target="_blank" rel="noreferrer">WorldEdit</a> - selection and building workflows; MTG lists it as a soft dependency for relevant tools.</li><li><a href="https://openterraingen.fandom.com/wiki/OTG_Presets" target="_blank" rel="noreferrer">Original OTG preset list</a> - background information on older presets. Check compatibility before use.</li><li><a href="https://openterraingen.fandom.com/wiki/Tools_%26_Resources" target="_blank" rel="noreferrer">Original OTG tools and resources</a> - historical links for preset creators.</li><li><a href="https://github.com/StudioLoad/ModernTerrainGenerator/issues" target="_blank" rel="noreferrer">Report a bug</a> - provide logs, version, and a minimal reproducible example.</li></ul><p>Third-party presets and tools from Minecraft 1.12 or 1.16 may need conversion for 1.21.11. Verify licences before redistributing third-party assets.</p></> }
-]
-
+const documentIds = docs.map((document) => document.id)
 
 export function App() {
- const pathToId = (pathname: string) => {
-  const slug = pathname.replace(/\/$/, "").split("/").pop()
-  return docs.some(doc => doc.id === slug) ? slug! : "overview"
- }
- const [activeId, setActiveId] = useState(() => pathToId(window.location.pathname))
- const [query, setQuery] = useState("")
- const [language, setLanguage] = useState<"en" | "pt">("en")
- const isPt = language === "pt"
- const locale: Locale = isPt ? pt : en
- const localizedDocs = useMemo(() => docs.map(doc => ({
-  ...doc,
-  title: locale.pages[doc.id as keyof typeof locale.pages]?.title ?? doc.title,
-  group: locale.pages[doc.id as keyof typeof locale.pages]?.group ?? doc.group,
-  summary: locale.pages[doc.id as keyof typeof locale.pages]?.summary ?? doc.summary,
-  content: isPt ? renderMarkdown(locale.pages[doc.id]?.content ?? "") : doc.content,
- })), [isPt, locale])
- const activeDoc = localizedDocs.find(doc => doc.id === activeId) ?? localizedDocs[0]
- const groupNames = locale.groups
- const filteredDocs = useMemo(() => localizedDocs.filter(doc => (doc.title+" "+doc.summary+" "+doc.group).toLowerCase().includes(query.toLowerCase())), [localizedDocs, query])
- const navigate = (id: string) => {
-  setActiveId(id)
-  const path = `/documentation/${id}`
-  if (window.location.pathname !== path) window.history.pushState({ id }, "", path)
- }
- useEffect(() => {
-  const onPopState = () => { const slug = window.location.pathname.replace(/\/$/, "").split("/").pop(); setActiveId(docs.some(doc => doc.id === slug) ? slug! : "overview") }
-  window.addEventListener("popstate", onPopState)
-  return () => window.removeEventListener("popstate", onPopState)
- }, [])
- const ui = locale.ui
- return <SidebarProvider><Sidebar><SidebarHeader className="gap-2 p-4"><a href="#" onClick={e=>{e.preventDefault();navigate("overview")}} className="flex items-center gap-2 font-semibold"><BookOpen className="size-5"/><span>{ui.brand}</span></a><div className="relative"><Search className="absolute top-2.5 left-2.5 size-4 text-muted-foreground"/><Input value={query} onChange={e=>setQuery(e.target.value)} placeholder={ui.search} className="pl-8" aria-label={ui.search}/></div></SidebarHeader><Separator/><SidebarContent>{groupNames.map(group=>{const items=filteredDocs.filter(doc=>doc.group===group);if(!items.length)return null;return <SidebarGroup key={group}><SidebarGroupLabel>{group}</SidebarGroupLabel><SidebarMenu>{items.map(doc=><SidebarMenuItem key={doc.id}><SidebarMenuButton isActive={activeId===doc.id} onClick={()=>navigate(doc.id)} tooltip={doc.title}><FileCode2/><span>{doc.title}</span></SidebarMenuButton></SidebarMenuItem>)}</SidebarMenu></SidebarGroup>})}</SidebarContent></Sidebar><SidebarInset className="min-w-0"><header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur"><SidebarTrigger/><Separator orientation="vertical" className="h-4"/><Breadcrumb><BreadcrumbList><BreadcrumbItem><BreadcrumbLink href="#" onClick={e=>{e.preventDefault();navigate("overview")}}>{ui.documentation}</BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator/><BreadcrumbItem><BreadcrumbPage>{activeDoc.title}</BreadcrumbPage></BreadcrumbItem></BreadcrumbList></Breadcrumb><div className="ml-auto flex items-center gap-2"><div className="flex items-center gap-2"><label htmlFor="language-select" className="sr-only">{ui.language}</label><select id="language-select" value={language} onChange={event => setLanguage(event.target.value as "en" | "pt")} className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"><option value="en">English</option><option value="pt">Português</option></select><Button variant="outline" size="sm" onClick={()=>window.open("https://github.com/StudioLoad/ModernTerrainGenerator","_blank","noopener,noreferrer")}><ExternalLink className="mr-2 size-4"/>{ui.source}</Button></div></div></header><main className="mx-auto w-full max-w-4xl px-5 py-8 md:px-8"><div className="mb-6 flex items-center gap-2 text-sm text-muted-foreground"><span>{activeDoc.group}</span><ChevronRight className="size-4"/><span>{activeDoc.summary}</span></div><h1 className="text-3xl font-semibold tracking-tight">{activeDoc.title}</h1><p className="mt-2 text-base text-muted-foreground">{activeDoc.summary}</p><Separator className="my-6"/><article className="max-w-none [&_a]:font-medium [&_a]:underline [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:mb-2 [&_li]:my-1 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6">{activeDoc.content}</article><Separator className="my-8"/><div className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground"><span>{ui.footer}</span><a href="https://github.com/StudioLoad/ModernTerrainGenerator/issues" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline">{ui.issue} <ChevronRight className="size-4"/></a></div></main></SidebarInset></SidebarProvider>
+  const [activeId, setActiveId] = useState(() => getDocumentIdFromPath(window.location.pathname, documentIds))
+  const [query, setQuery] = useState("")
+  const [language, setLanguage] = useState<"en" | "pt">("en")
+  const locale = locales[language]
+
+  const localizedDocuments = useMemo<DocSection[]>(
+    () =>
+      docs.map((document) => {
+        const translated = locale.pages[document.id]
+
+        return {
+          ...document,
+          title: translated?.title ?? document.title,
+          group: translated?.group ?? document.group,
+          summary: translated?.summary ?? document.summary,
+          content:
+            language === "pt"
+              ? renderMarkdown(translated?.content ?? "")
+              : document.content,
+        }
+      }),
+    [language, locale],
+  )
+
+  const filteredDocuments = useMemo(() => {
+    const search = query.trim().toLocaleLowerCase()
+    if (!search) return localizedDocuments
+
+    return localizedDocuments.filter((document) =>
+      `${document.title} ${document.summary} ${document.group}`
+        .toLocaleLowerCase()
+        .includes(search),
+    )
+  }, [localizedDocuments, query])
+
+  const navigate = (id: string) => {
+    setActiveId(id)
+    const path = `/documentation/${id}`
+
+    if (window.location.pathname !== path) {
+      window.history.pushState({ id }, "", path)
+    }
+  }
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveId(getDocumentIdFromPath(window.location.pathname, documentIds))
+    }
+
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
+
+  const activeDocument =
+    localizedDocuments.find((document) => document.id === activeId) ?? localizedDocuments[0]
+
+  return (
+    <SidebarProvider>
+      <DocumentationSidebar
+        brand={locale.ui.brand}
+        searchPlaceholder={locale.ui.search}
+        query={query}
+        onQueryChange={setQuery}
+        groups={locale.groups}
+        documents={filteredDocuments}
+        activeId={activeId}
+        onNavigate={navigate}
+      />
+      <SidebarInset className="min-w-0">
+        <DocumentationHeader
+          labels={locale.ui}
+          title={activeDocument.title}
+          language={language}
+          onLanguageChange={setLanguage}
+          onNavigate={navigate}
+        />
+        <DocumentationArticle document={activeDocument} labels={locale.ui} />
+      </SidebarInset>
+    </SidebarProvider>
+  )
 }
+
 export default App
