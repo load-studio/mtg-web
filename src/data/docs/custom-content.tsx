@@ -14,12 +14,12 @@ export const customContentDocs: DocSection[] = [
       <p>Custom objects are text-based descriptions of blocks and optional metadata used to place hand-built content during generation or with MTG commands. The inherited OTG format includes BO2, BO3, and BO4, but BO2 is legacy. Prefer BO3 for simpler objects and BO4 where your preset and MTG build support advanced structure features.</p>
       <h2>BO3 and BO4</h2>
       <ul>
-      <li>
-      <strong>BO3:</strong> a block object suitable for smaller objects and, through structure resources, linked parts of larger builds.</li>
-      <li>
-      <strong>BO4:</strong> supports advanced branching and structure placement rules. BO4 structures require a compatible preset structure mode; verify <code>CustomStructureType</code>.</li>
-      <li>
-      <strong>BO2:</strong> legacy support may vary. Test the exact MTG version before building new content around it.</li>
+        <li>
+          <strong>BO3:</strong> a block object suitable for smaller objects and, through structure resources, linked parts of larger builds.</li>
+        <li>
+          <strong>BO4:</strong> supports advanced branching and structure placement rules. BO4 structures require a compatible preset structure mode; verify <code>CustomStructureType</code>.</li>
+        <li>
+          <strong>BO2:</strong> legacy support may vary. Test the exact MTG version before building new content around it.</li>
       </ul>
       <h2>Typical preset layout</h2>
       <Code title="Illustrative preset tree">{"MyPreset/\n├── WorldConfig.ini\n├── WorldBiomes/\n│   └── Plains.bc\n└── WorldObjects/\n    ├── Trees/\n    │   └── ExampleTree.bo3\n    └── Structures/\n        └── ExampleHouse.bo4"}</Code>
