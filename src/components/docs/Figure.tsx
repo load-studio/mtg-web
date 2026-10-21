@@ -17,7 +17,7 @@ export function Figure({ src, alt, caption }: FigureProps) {
         href={src}
         target="_blank"
         rel="noreferrer"
-        className="relative inline-block min-h-32 max-w-full overflow-hidden rounded-md border bg-muted"
+        className="relative inline-block min-h-32 min-w-48 max-w-full overflow-hidden rounded-md border bg-muted"
         aria-label={alt}
       >
         {!isLoaded ? (
