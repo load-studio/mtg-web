@@ -3,11 +3,25 @@ import { DocumentationCode } from "@/components/docs/DocumentationCode"
 
 function renderInline(value: string, keyPrefix: string): ReactNode[] {
   const parts = value
-    .split(/(`[^`]+`|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g)
+    .split(/(!\[[^\]]*\]\([^)]+\)|`[^`]+`|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g)
     .filter(Boolean)
 
   return parts.map((part, index) => {
     const key = `${keyPrefix}-${index}`
+
+    const image = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+    if (image) {
+      return (
+        <img
+          key={key}
+          src={image[2]}
+          alt={image[1]}
+          loading="lazy"
+          decoding="async"
+          className="my-3 block max-h-64 w-full rounded-md border object-cover"
+        />
+      )
+    }
 
     if (part.startsWith("`") && part.endsWith("`")) {
       return <code key={key}>{part.slice(1, -1)}</code>
@@ -20,7 +34,15 @@ function renderInline(value: string, keyPrefix: string): ReactNode[] {
     const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
     if (link) {
       return (
-        <a key={key} href={link[2]} target="_blank" rel="noreferrer">
+        <a
+          key={key}
+          href={link[2]}
+          target="_blank"
+          rel="noreferrer"
+          className={/download|descarregar/i.test(link[1])
+            ? "my-2 inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground no-underline hover:opacity-90"
+            : undefined}
+        >
           {link[1]}
         </a>
       )
