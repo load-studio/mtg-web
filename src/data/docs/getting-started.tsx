@@ -14,11 +14,11 @@ export const gettingStartedDocs: DocSection[] = [
       <p>MTG separates the generation engine from its presets. A preset describes terrain, biome placement, surface blocks, resources, and custom objects used when generating new chunks.</p>
       <h2>What you can configure</h2>
       <ul>
-      <li>Terrain height, volatility, landmasses, oceans, and rivers.</li>
-      <li>Biome groups, biome size and rarity, islands, and borders.</li>
-      <li>Biome surfaces, underground resources, plants, lakes, and decoration.</li>
-      <li>Custom objects and structures defined with BO3 and BO4 files where supported.</li>
-      <li>Biome and terrain maps for inspecting generated layouts.</li>
+        <li>Terrain height, volatility, landmasses, oceans, and rivers.</li>
+        <li>Biome groups, biome size and rarity, islands, and borders.</li>
+        <li>Biome surfaces, underground resources, plants, lakes, and decoration.</li>
+        <li>Custom objects and structures defined with BO3 and BO4 files where supported.</li>
+        <li>Biome and terrain maps for inspecting generated layouts.</li>
       </ul>
       <h2>Compatibility</h2>
       <p>This documentation targets MTG on Paper 1.21.11 only. It does not cover Forge, Fabric, client-side installation, mod loaders, or modpack-specific dimension configuration. Older OTG pages describe earlier versions; use this guide and the preset files shipped with MTG as the reference for current behaviour.</p>
@@ -38,49 +38,49 @@ export const gettingStartedDocs: DocSection[] = [
       <p>Source catalogue: <a href="https://openterraingen.fandom.com/wiki/OTG_Presets" target="_blank" rel="noreferrer">OTG Presets on the Open Terrain Generator Wiki</a>.</p>
       <h2>Team OTG</h2>
       <ul>
-      <li>
-      <strong>Default:</strong> a vanilla-like generation preset intended as a base for further customization.</li>
-      <li>
-      <strong>Vanilla Vistas:</strong> varied and picturesque terrain with a vanilla feel, balancing height variation with flatter areas for building.</li>
-      <li>
-      <strong>Biome Bundle:</strong> a mix of realistic and fantasy landscapes, custom biomes, trees, boulders, ruins, buildings, dungeons and other structures.</li>
-      <li>
-      <strong>Biome Bundle O' Plenty:</strong> a Biome Bundle variation designed around Biomes O' Plenty.</li>
-      <li>
-      <strong>Wildlands:</strong> detailed landscapes with climate zones, volcanoes, glaciers, craters and transitions between biomes.</li>
-      <li>
-      <strong>Skylands:</strong> interconnected floating islands above the void, with a lower-verticality variant also described in the catalogue.</li>
-      <li>
-      <strong>Flatlands:</strong> a superflat-style world with vanilla biomes.</li>
-      <li>
-      <strong>Void:</strong> a void world with a single floating island at spawn.</li>
-      <li>
-      <strong>Alien Jungle:</strong> colourful, unusual jungle biomes, primarily described as a dimension preset.</li>
-      <li>
-      <strong>Tutorial World:</strong> an example preset demonstrating climate groups, mountains, hills, plains, rivers and lakes.</li>
+        <li>
+          <strong>Default:</strong> a vanilla-like generation preset intended as a base for further customization.</li>
+        <li>
+          <strong>Vanilla Vistas:</strong> varied and picturesque terrain with a vanilla feel, balancing height variation with flatter areas for building.</li>
+        <li>
+          <strong>Biome Bundle:</strong> a mix of realistic and fantasy landscapes, custom biomes, trees, boulders, ruins, buildings, dungeons and other structures.</li>
+        <li>
+          <strong>Biome Bundle O' Plenty:</strong> a Biome Bundle variation designed around Biomes O' Plenty.</li>
+        <li>
+          <strong>Wildlands:</strong> detailed landscapes with climate zones, volcanoes, glaciers, craters and transitions between biomes.</li>
+        <li>
+          <strong>Skylands:</strong> interconnected floating islands above the void, with a lower-verticality variant also described in the catalogue.</li>
+        <li>
+          <strong>Flatlands:</strong> a superflat-style world with vanilla biomes.</li>
+        <li>
+          <strong>Void:</strong> a void world with a single floating island at spawn.</li>
+        <li>
+          <strong>Alien Jungle:</strong> colourful, unusual jungle biomes, primarily described as a dimension preset.</li>
+        <li>
+          <strong>Tutorial World:</strong> an example preset demonstrating climate groups, mountains, hills, plains, rivers and lakes.</li>
       </ul>
       <h2>Other community presets</h2>
       <ul>
-      <li>
-      <strong>Dregora (NLBlackEagle):</strong> a large-scale world featuring many biomes and custom structures.</li>
-      <li>
-      <strong>Traveler's Dream (Darsenia):</strong> detailed terrain inspired by real-world landscapes with a fantasy influence.</li>
-      <li>
-      <strong>Thaumatic Traveler's Dream (Darsenia):</strong> a Traveler's Dream variant with Thaumcraft support.</li>
-      <li>
-      <strong>Dungeons (PG85):</strong> a demo dimension for testing custom structure features.</li>
-      <li>
-      <strong>Eternal (Jayzet):</strong> an overhaul of world generation with custom content and terrain settings.</li>
-      <li>
-      <strong>Far From Home (Incognietis):</strong> varied terrain styles with smooth biome transitions and expansive views.</li>
+        <li>
+          <strong>Dregora (NLBlackEagle):</strong> a large-scale world featuring many biomes and custom structures.</li>
+        <li>
+          <strong>Traveler's Dream (Darsenia):</strong> detailed terrain inspired by real-world landscapes with a fantasy influence.</li>
+        <li>
+          <strong>Thaumatic Traveler's Dream (Darsenia):</strong> a Traveler's Dream variant with Thaumcraft support.</li>
+        <li>
+          <strong>Dungeons (PG85):</strong> a demo dimension for testing custom structure features.</li>
+        <li>
+          <strong>Eternal (Jayzet):</strong> an overhaul of world generation with custom content and terrain settings.</li>
+        <li>
+          <strong>Far From Home (Incognietis):</strong> varied terrain styles with smooth biome transitions and expansive views.</li>
       </ul>
       <h2>Compatibility with MTG</h2>
       <p>The original catalogue lists older OTG releases, including Minecraft 1.12 and 1.16, and may describe Forge, PaperSpigot or Spigot support for those versions. That historical support does not imply support for MTG or Paper 1.21.11.</p>
       <ol>
-      <li>Check the preset's original Minecraft and OTG version, licence, and download details on the source page.</li>
-      <li>Back up the server and test the preset on a separate Paper 1.21.11 instance.</li>
-      <li>Compare its <code>WorldConfig.ini</code>, biome configs, resource queue and custom objects with the <a href="https://github.com/StudioLoad/ModernTerrainGenerator/tree/main/resources/Presets" target="_blank" rel="noreferrer">presets bundled with MTG</a>.</li>
-      <li>Replace unsupported blocks, biome identifiers or mod-specific dependencies, and inspect server logs and newly generated chunks.</li>
+        <li>Check the preset's original Minecraft and OTG version, licence, and download details on the source page.</li>
+        <li>Back up the server and test the preset on a separate Paper 1.21.11 instance.</li>
+        <li>Compare its <code>WorldConfig.ini</code>, biome configs, resource queue and custom objects with the <a href="https://github.com/StudioLoad/ModernTerrainGenerator/tree/main/resources/Presets" target="_blank" rel="noreferrer">presets bundled with MTG</a>.</li>
+        <li>Replace unsupported blocks, biome identifiers or mod-specific dependencies, and inspect server logs and newly generated chunks.</li>
       </ol>
       <p>Do not assume a preset will work unchanged simply because the original page lists Paper or Spigot support. Test it before using it on a live world.</p>
     </>
@@ -95,17 +95,17 @@ export const gettingStartedDocs: DocSection[] = [
     <>
       <h2>Requirements</h2>
       <ul>
-      <li>A Minecraft Java server running <strong>Paper 1.21.11</strong>.</li>
-      <li>A Java runtime supported by that Paper build.</li>
-      <li>Permission to stop the server and install plugins.</li>
+        <li>A Minecraft Java server running <strong>Paper 1.21.11</strong>.</li>
+        <li>A Java runtime supported by that Paper build.</li>
+        <li>Permission to stop the server and install plugins.</li>
       </ul>
       <h2>Install the plugin</h2>
       <ol>
-      <li>Stop the server cleanly.</li>
-      <li>Download the MTG release JAR that explicitly targets Paper 1.21.11 from <a href="https://github.com/StudioLoad/ModernTerrainGenerator/releases" target="_blank" rel="noreferrer">GitHub Releases</a>.</li>
-      <li>Place the JAR in the server's <code>plugins</code> directory.</li>
-      <li>Start the server and check the console for plugin loading errors.</li>
-      <li>Stop the server before editing preset files or making a backup.</li>
+        <li>Stop the server cleanly.</li>
+        <li>Download the MTG release JAR that explicitly targets Paper 1.21.11 from <a href="https://github.com/StudioLoad/ModernTerrainGenerator/releases" target="_blank" rel="noreferrer">GitHub Releases</a>.</li>
+        <li>Place the JAR in the server's <code>plugins</code> directory.</li>
+        <li>Start the server and check the console for plugin loading errors.</li>
+        <li>Stop the server before editing preset files or making a backup.</li>
       </ol>
       <p>MTG is a Paper plugin. Do not place its plugin JAR in a <code>mods</code> directory.</p>
       <h2>Install a preset</h2>
@@ -138,11 +138,11 @@ export const gettingStartedDocs: DocSection[] = [
       <p>The preset loader reads preset folders from the plugin's data directory. The bundled source files are in <code>resources/Presets/Default</code>. Confirm the exact runtime data path in the installed build before copying files.</p>
       <h2>Install a preset</h2>
       <ol>
-      <li>Stop the server.</li>
-      <li>Copy the complete preset folder into the plugin's <code>Presets</code> directory. Keep the internal structure, including <code>WorldConfig.ini</code>, <code>WorldBiomes</code>, and any <code>WorldObjects</code> directory.</li>
-      <li>Check that the folder name is unique and all referenced biome and object files exist.</li>
-      <li>Start the server and inspect the console for configuration warnings.</li>
-      <li>Configure a newly created world to use MTG and the desired preset using the world-creation workflow supported by your server.</li>
+        <li>Stop the server.</li>
+        <li>Copy the complete preset folder into the plugin's <code>Presets</code> directory. Keep the internal structure, including <code>WorldConfig.ini</code>, <code>WorldBiomes</code>, and any <code>WorldObjects</code> directory.</li>
+        <li>Check that the folder name is unique and all referenced biome and object files exist.</li>
+        <li>Start the server and inspect the console for configuration warnings.</li>
+        <li>Configure a newly created world to use MTG and the desired preset using the world-creation workflow supported by your server.</li>
       </ol>
       <p>Do not assume an OTG 1.12 or 1.16 preset works unchanged. Validate resource names, Minecraft block identifiers, biome names, and object configuration against MTG and Minecraft 1.21.11.</p>
       <h2>Existing worlds</h2>
