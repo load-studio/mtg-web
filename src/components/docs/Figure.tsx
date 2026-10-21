@@ -19,25 +19,25 @@ export function Figure({
   const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading")
 
   return (
-    <figure className={`my-6 space-y-2 ${className ?? ""}`}>
+    <figure className={`my-6 min-w-0 space-y-2 ${className ?? ""}`}>
       <a
         href={src}
         target="_blank"
         rel="noreferrer"
-        className={`relative inline-block min-h-32 min-w-0 max-w-full overflow-hidden rounded-md border bg-muted ${imageClassName ?? ""}`}
         aria-label={alt}
+        className="relative block aspect-[4/3] min-h-32 w-full min-w-0 overflow-hidden rounded-md border bg-muted"
       >
         {status === "loading" && (
           <Skeleton
             aria-hidden="true"
-            className="absolute inset-0 z-20 h-full min-h-32 w-full rounded-none"
+            className="absolute inset-0 z-20 h-full w-full rounded-none"
           />
         )}
         {status === "error" ? (
           <span
             role="img"
             aria-label={alt}
-            className="absolute inset-0 flex min-h-32 items-center justify-center bg-muted text-muted-foreground"
+            className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground"
           >
             <span aria-hidden="true" className="text-4xl font-semibold">:(</span>
           </span>
@@ -49,7 +49,7 @@ export function Figure({
             decoding="async"
             onLoad={() => setStatus("loaded")}
             onError={() => setStatus("error")}
-            className={`relative block h-auto max-w-full transition-opacity duration-300 ${status === "loaded" ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 h-full w-full object-contain object-center transition-opacity duration-300 ${status === "loaded" ? "opacity-100" : "opacity-0"} ${imageClassName ?? ""}`}
           />
         )}
       </a>
