@@ -20,7 +20,21 @@ const documentIds = docs.map((document) => document.id)
 export function App() {
   const [activeId, setActiveId] = useState(() => getDocumentIdFromPath(window.location.pathname, documentIds))
   const [query, setQuery] = useState("")
-  const [language, setLanguage] = useState<"en" | "pt">("en")
+  const [language, setLanguage] = useState<"en" | "pt">(() => {
+    try {
+      return window.localStorage.getItem("mtg-docs-language") === "pt" ? "pt" : "en"
+    } catch {
+      return "en"
+    }
+  })
+  useEffect(() => {
+    try {
+      window.localStorage.setItem("mtg-docs-language", language)
+    } catch {
+      // Language selection still works when storage is unavailable.
+    }
+  }, [language])
+
   const locale = locales[language]
 
   const localizedDocuments = useMemo<DocSection[]>(
