@@ -179,12 +179,12 @@ export function renderMarkdown(markdown: string): ReactNode {
       blocks.push(
         <div key={`preset-grid-${blocks.length}`} className="my-5 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2">
           {cardBlocks.map((cardLines, cardIndex) => {
-            const imageLine = cardLines.find((value) => /^!\\[[^\\]]*\\]\\([^)]+\\)$/.test(value.trim()))?.trim() ?? ""
-            const titleLine = cardLines.find((value) => /^\\*\\*.+\\*\\*$/.test(value.trim()))?.trim() ?? ""
-            const linkLine = cardLines.find((value) => /^\\[[^\\]]+\\]\\([^)]+\\)$/.test(value.trim()))?.trim() ?? ""
+            const imageLine = cardLines.find((value) => /^!\[([^\]]*)\]\(([^)]+)\)$/.test(value.trim()))?.trim() ?? ""
+            const titleLine = cardLines.find((value) => /^\*\*.+\*\*$/.test(value.trim()))?.trim() ?? ""
+            const linkLine = cardLines.find((value) => /^\[([^\]]+)\]\(([^)]+)\)$/.test(value.trim()))?.trim() ?? ""
             const description = cardLines.find((value) => value.trim() && value.trim() !== imageLine && value.trim() !== titleLine && value.trim() !== linkLine)?.trim() ?? ""
-            const image = imageLine.match(/^!\\[([^\\]]*)\\]\\(([^)]+)\\)$/)
-            const link = linkLine.match(/^\\[([^\\]]+)\\]\\(([^)]+)\\)$/)
+            const image = imageLine.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+            const link = linkLine.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
 
             return (
               <div key={cardIndex} className="flex h-full min-w-0 flex-col rounded-lg border p-4">
