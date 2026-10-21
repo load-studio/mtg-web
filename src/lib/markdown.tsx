@@ -1,5 +1,32 @@
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import { DocumentationCode } from "@/components/docs/DocumentationCode"
+
+function MarkdownImage({ src, alt }: { src: string; alt: string }) {
+  const [status, setStatus] = useState<"loading" | "loaded" | "error">("loading")
+
+  return (
+    <div className="relative my-3 aspect-[4/3] w-full overflow-hidden rounded-md border bg-muted">
+      {status === "loading" && (
+        <div className="absolute inset-0 animate-pulse bg-muted" aria-hidden="true" />
+      )}
+      {status === "error" ? (
+        <div role="img" aria-label={alt} className="absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground">
+          <span aria-hidden="true" className="text-4xl font-semibold">:(</span>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setStatus("loaded")}
+          onError={() => setStatus("error")}
+          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ${status === "loaded" ? "opacity-100" : "opacity-0"}`}
+        />
+      )}
+    </div>
+  )
+}
 
 function renderInline(value: string, keyPrefix: string): ReactNode[] {
   const parts = value
@@ -11,16 +38,7 @@ function renderInline(value: string, keyPrefix: string): ReactNode[] {
 
     const image = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
     if (image) {
-      return (
-        <img
-          key={key}
-          src={image[2]}
-          alt={image[1]}
-          loading="lazy"
-          decoding="async"
-          className="my-3 block max-h-64 w-full rounded-md border object-cover"
-        />
-      )
+      return <MarkdownImage key={key} src={image[2]} alt={image[1]} />
     }
 
     if (part.startsWith("`") && part.endsWith("`")) {
