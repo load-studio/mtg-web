@@ -1,21 +1,33 @@
-# React + TypeScript + Vite + shadcn/ui
+# MTG Documentation
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+Documentation website for [ModernTerrainGenerator](https://github.com/StudioLoad/ModernTerrainGenerator), focused on **Paper 1.21.11**.
 
-## Adding components
+The site adapts the original OpenTerrainGenerator wiki topics for MTG and excludes Forge, Fabric, mod-loader, and modpack-specific setup. Legacy OTG pages are linked as background references where useful; they are not presented as confirmation that every old setting works in MTG.
 
-To add components to your app, run the following command:
+## Development
+
+Requirements: Node.js compatible with the Vite version in `package.json` and pnpm.
 
 ```bash
-npx shadcn@latest add button
+pnpm install
+pnpm dev
 ```
 
-This will place the ui components in the `src/components` directory.
+## Checks
 
-## Using components
-
-To use the components in your app, import them as follows:
-
-```tsx
-import { Button } from "@/components/ui/button"
+```bash
+pnpm typecheck
+pnpm lint
+pnpm build
 ```
+
+## Documentation coverage
+
+- Installation and preset setup
+- Worlds, dimensions, commands, and permissions
+- `WorldConfig.ini`, biome configuration files, and resource queues
+- Custom objects and structures
+- Creating presets, spawning custom objects, and image-based biome maps
+- Preset compatibility and useful resources
+
+The site uses the shadcn/ui components already included in this repository. Images from the original OTG community wiki are credited in context and retained as historical illustrations when they remain available.
