@@ -39,7 +39,7 @@ export function DocumentationHeader({
 }: DocumentationHeaderProps) {
   const languageSelectId = useId()
   const { theme, setTheme } = useTheme()
-  const isDark = theme === "dark"
+  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
@@ -71,8 +71,8 @@ export function DocumentationHeader({
           size="sm"
           pressed={isDark}
           onPressedChange={(pressed) => setTheme(pressed ? "dark" : "light")}
-          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          aria-label={isDark ? labels.switchToLight : labels.switchToDark}
+          title={isDark ? labels.switchToLight : labels.switchToDark}
         >
           {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
         </Toggle>
