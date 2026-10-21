@@ -9,7 +9,7 @@ function renderInline(value: string, keyPrefix: string): ReactNode[] {
   return parts.map((part, index) => {
     const key = `${keyPrefix}-${index}`
 
-    const image = part.match(/^!\\[([^\\]]*)\\]\\(([^)]+)\\)$/)
+    const image = part.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
     if (image) {
       return (
         <img
